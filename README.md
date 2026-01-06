@@ -1,1 +1,1 @@
-# 02476 - Machine-Learning-Operations
+# 02476 - Machine Learning Operations (MLOps)
