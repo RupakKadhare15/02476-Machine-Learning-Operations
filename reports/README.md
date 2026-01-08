@@ -54,9 +54,9 @@ will check the repositories and the code to verify your answers.
 
 * [X] Create a git repository (M5) 
 * [X] Make sure that all team members have write access to the GitHub repository (M5) 
-* [ ] Create a dedicated environment for you project to keep track of your packages (M2) 
+* [X] Create a dedicated environment for you project to keep track of your packages (M2) 
     - @Flo
-* [ ] Create the initial file structure using cookiecutter with an appropriate template (M6) 
+* [X] Create the initial file structure using cookiecutter with an appropriate template (M6) 
     - @FLo
 * [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) 
     - Implement function that returns dataset as a Transformers Dataset object
