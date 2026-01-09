@@ -9,6 +9,7 @@ DATA_PATH = Path('data')
 
 
 def main():
+    """Download and extract dataset from Google Drive."""
     # This creates the directory
     DATA_PATH.mkdir(parents=True, exist_ok=True)
     zip_path = DATA_PATH / 'data.zip'
