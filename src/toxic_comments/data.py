@@ -1,29 +1,33 @@
+import requests
+import shutil
 from pathlib import Path
 
-import typer
-from torch.utils.data import Dataset
+# --- CONFIG ---
+DRIVE_ID = "1czsN8ebcoAkwAhs6rKdw3Enz0oBzdzTP"
+DATA_PATH = Path("data")
 
+def main():
+    # This creates the directory
+    DATA_PATH.mkdir(parents=True, exist_ok=True)
+    zip_path = DATA_PATH / "data.zip"
 
-class MyDataset(Dataset):
-    """My custom dataset."""
+    print("Downloading...")
+    url = "https://docs.google.com/uc?export=download"
+    session = requests.Session()
+    response = session.get(url, params={'id': DRIVE_ID}, stream=True)
+    
+    # Handle Google's virus warning token
+    token = next((v for k, v in response.cookies.items() if k.startswith('download_warning')), None)
+    if token:
+        response = session.get(url, params={'id': DRIVE_ID, 'confirm': token}, stream=True)
 
-    def __init__(self, data_path: Path) -> None:
-        self.data_path = data_path
+    with open(zip_path, "wb") as f:
+        for chunk in response.iter_content(32768):
+            if chunk: f.write(chunk)
 
-    def __len__(self) -> int:
-        """Return the length of the dataset."""
-
-    def __getitem__(self, index: int):
-        """Return a given sample from the dataset."""
-
-    def preprocess(self, output_folder: Path) -> None:
-        """Preprocess the raw data and save it to the output folder."""
-
-def preprocess(data_path: Path, output_folder: Path) -> None:
-    print("Preprocessing data...")
-    dataset = MyDataset(data_path)
-    dataset.preprocess(output_folder)
-
+    print("Extracting...")
+    shutil.unpack_archive(zip_path, DATA_PATH)
+    print("Done.")
 
 if __name__ == "__main__":
-    typer.run(preprocess)
+    main()
