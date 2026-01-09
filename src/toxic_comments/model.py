@@ -4,13 +4,15 @@ from torch import nn
 
 class Model(nn.Module):
 
-    """Just a dummy model to show how to structure your code"""
+    """Just a dummy model to show how to structure your code."""
 
     def __init__(self):
+        """ "Initialize the Model."""
         super().__init__()
         self.layer = nn.Linear(1, 1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward pass of the model."""
         return self.layer(x)
 
 
