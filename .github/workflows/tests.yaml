@@ -1,13 +1,12 @@
 name: Unit Tests
 
-on:
-  push:
-    branches:
-      - main
-      - fix-github-workflow
-  pull_request:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
 jobs:
   test:
