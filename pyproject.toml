@@ -21,6 +21,7 @@ dependencies = [
     "emoji==0.6.0",
     "fastapi==0.115.6",
     "lightning>=2.6.0",
+    "pandas>=2.3.3",
     "torch==2.6.0",
     "transformers>=4.57.3",
     "typer==0.15.1",
@@ -37,6 +38,7 @@ dev = [
     "pytest==8.3.4",
     "ruff==0.1.3",
     "mkdocstrings-python==1.12.2",
+    "snakeviz>=2.2.2",
 ]
 
 
@@ -58,3 +60,6 @@ line-length = 120
 
 [tool.coverage.run]
 omit = ["tests/*"]
+
+[project.scripts]
+train = "toxic_comments.train:main"
