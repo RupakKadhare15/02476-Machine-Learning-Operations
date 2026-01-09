@@ -297,6 +297,12 @@ wheels = [
 ]
 
 [[package]]
+name = "emoji"
+version = "0.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ff/1c/1f1457fe52d0b30cbeebfd578483cedb3e3619108d2d5a21380dfecf8ffd/emoji-0.6.0.tar.gz", hash = "sha256:e42da4f8d648f8ef10691bc246f682a1ec6b18373abfd9be10ec0b398823bd11", size = 51003, upload-time = "2020-08-02T02:51:09.528Z" }
+
+[[package]]
 name = "fastapi"
 version = "0.115.6"
 source = { registry = "https://pypi.org/simple" }
@@ -1645,6 +1651,7 @@ name = "toxic-comments"
 version = "0.0.1"
 source = { editable = "." }
 dependencies = [
+    { name = "emoji" },
     { name = "fastapi" },
     { name = "lightning" },
     { name = "torch", version = "2.6.0", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform == 'darwin'" },
@@ -1668,6 +1675,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "emoji", specifier = "==0.6.0" },
     { name = "fastapi", specifier = "==0.115.6" },
     { name = "lightning", specifier = ">=2.6.0" },
     { name = "torch", specifier = "==2.6.0", index = "https://download.pytorch.org/whl/cpu" },
