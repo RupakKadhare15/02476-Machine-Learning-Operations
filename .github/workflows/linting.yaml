@@ -36,8 +36,8 @@ jobs:
 
       - name: ruff check
         run: |
-          ruff check .
+          uv ruff check .
 
       - name: ruff format
         run: |
-          ruff format .
+          uv ruff format .
