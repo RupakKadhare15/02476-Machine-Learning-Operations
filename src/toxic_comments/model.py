@@ -1,8 +1,9 @@
-import torch
-import pytorch_lightning as pl
-from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
-from torch.optim import AdamW
 from collections import defaultdict
+
+import pytorch_lightning as pl
+import torch
+from torch.optim import AdamW
+from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
 
 
 class ToxicCommentsTransformer(pl.LightningModule):

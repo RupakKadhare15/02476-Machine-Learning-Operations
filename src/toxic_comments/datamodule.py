@@ -1,18 +1,20 @@
-import pandas as pd
-import torch
-import pytorch_lightning as pl
-from torch.utils.data import Dataset, DataLoader
-from transformers import AutoTokenizer
 from pathlib import Path
 from typing import Optional
+
+import pandas as pd
+import pytorch_lightning as pl
+import torch
+from torch.utils.data import DataLoader, Dataset
+from transformers import AutoTokenizer
 
 
 class ToxicCommentsDataset(Dataset):
     def __init__(self, csv_file: str, tokenizer, max_length: int = 128):
         """
         Dataset for toxic comments classification.
-        
+
         Args:
+        ----
             csv_file: Path to the CSV file containing comment_text and toxic columns
             tokenizer: Hugging Face tokenizer instance
             max_length: Maximum sequence length for tokenization
@@ -20,14 +22,14 @@ class ToxicCommentsDataset(Dataset):
         self.data = pd.read_csv(csv_file)
         self.tokenizer = tokenizer
         self.max_length = max_length
-        
+
     def __len__(self):
         return len(self.data)
-    
+
     def __getitem__(self, idx):
         text = str(self.data.iloc[idx]['comment_text'])
         label = int(self.data.iloc[idx]['toxic'])
-        
+
         # Tokenize the text
         encoding = self.tokenizer(
             text,
@@ -38,7 +40,7 @@ class ToxicCommentsDataset(Dataset):
             return_attention_mask=True,
             return_tensors='pt'
         )
-        
+
         return {
             'input_ids': encoding['input_ids'].flatten(),
             'attention_mask': encoding['attention_mask'].flatten(),
@@ -58,8 +60,9 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
     ):
         """
         PyTorch Lightning DataModule for Toxic Comments dataset.
-        
+
         Args:
+        ----
             data_dir: Directory containing train.csv, validation.csv, and test.csv
             model_name_or_path: Model identifier for tokenizer
             train_batch_size: Batch size for training
@@ -74,23 +77,24 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
         self.eval_batch_size = eval_batch_size
         self.max_length = max_length
         self.num_workers = num_workers
-        
+
         # Initialize tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name_or_path,
             use_fast=True,
             normalization=True
         )
-        
+
         self.train_dataset = None
         self.val_dataset = None
         self.test_dataset = None
-    
+
     def setup(self, stage: Optional[str] = None):
         """
         Load data. Set variables: self.train_dataset, self.val_dataset, self.test_dataset.
-        
+
         Args:
+        ----
             stage: Either 'fit', 'validate', 'test', or 'predict'
         """
         if stage == 'fit' or stage is None:
@@ -104,14 +108,14 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
                 tokenizer=self.tokenizer,
                 max_length=self.max_length
             )
-        
+
         if stage == 'test' or stage is None:
             self.test_dataset = ToxicCommentsDataset(
                 csv_file=self.data_dir / "test.csv",
                 tokenizer=self.tokenizer,
                 max_length=self.max_length
             )
-    
+
     def train_dataloader(self):
         return DataLoader(
             self.train_dataset,
@@ -119,7 +123,7 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers
         )
-    
+
     def val_dataloader(self):
         return DataLoader(
             self.val_dataset,
@@ -127,7 +131,7 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers
         )
-    
+
     def test_dataloader(self):
         return DataLoader(
             self.test_dataset,
@@ -147,14 +151,14 @@ if __name__ == "__main__":
         max_length=128,
         num_workers=0  # Use 0 for testing to avoid multiprocessing pickle issues
     )
-    
+
     # Setup for training
     datamodule.setup('fit')
-    
+
     # Get a batch from training data
     train_loader = datamodule.train_dataloader()
     batch = next(iter(train_loader))
-    
+
     print(f"Input IDs shape: {batch['input_ids'].shape}")
     print(f"Attention mask shape: {batch['attention_mask'].shape}")
     print(f"Labels shape: {batch['labels'].shape}")

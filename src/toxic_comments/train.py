@@ -1,7 +1,9 @@
+import hydra
+import pytorch_lightning as pl
+
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
-import pytorch_lightning as pl
-import hydra
+
 
 @hydra.main(version_base=None, config_path='../../configs', config_name="training.yaml")
 def main(cfg):
