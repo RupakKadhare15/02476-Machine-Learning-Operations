@@ -86,9 +86,10 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [ ] Use profiling to optimize your code (M12)
     - @Flo
-* [ ] Use logging to log important events in your code (M14)
+* [X] Use logging to log important events in your code (M14)
     - @Levi
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+    - Results are logged to Weights & Biases
+* [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
     - @Levi
 * [ ] Consider running a hyperparameter optimization sweep (M14)
     - @Levi
