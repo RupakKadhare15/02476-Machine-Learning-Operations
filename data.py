@@ -5,7 +5,6 @@ from pathlib import Path
 # --- CONFIG ---
 DRIVE_ID = "1czsN8ebcoAkwAhs6rKdw3Enz0oBzdzTP"
 DATA_PATH = Path("data")
-# --------------
 
 def main():
     # This creates the directory
