@@ -1,11 +1,14 @@
-from toxic_comments.model import Model
 from toxic_comments.data import MyDataset
+from toxic_comments.model import Model
+
 
 def train():
-    _ = MyDataset("data/raw") # _ => dataset
-    _ = Model() # _ => model
+    """Train the model."""
+    _ = MyDataset('data/raw')
+    _ = Model()
     # add rest of your training code here
     pass
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     train()
