@@ -7,7 +7,7 @@ class Model(nn.Module):
     """Just a dummy model to show how to structure your code."""
 
     def __init__(self):
-        """ "Initialize the Model."""
+        """Initialize the Model."""
         super().__init__()
         self.layer = nn.Linear(1, 1)
 
