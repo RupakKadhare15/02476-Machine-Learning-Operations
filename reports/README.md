@@ -58,14 +58,14 @@ will check the repositories and the code to verify your answers.
     - @Flo
 * [X] Create the initial file structure using cookiecutter with an appropriate template (M6) 
     - @FLo
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) 
+* [X] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) 
     - Implement function that returns dataset as a Transformers Dataset object
     - @Rupak
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [X] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
     - @Levi
 * [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
-    - @Levi
+    - Skipped for now as we are using uv as a dependency manager.
 * [ ] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
     - Use ```ruff``` for linting and formatting (add any customizations to `pyproject.toml`)
     - @Flo
