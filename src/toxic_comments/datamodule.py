@@ -14,7 +14,7 @@ class ToxicCommentsDataset(Dataset):
 
     def __init__(self, csv_file: str, tokenizer, max_length: int = 128):
         """
-        Create Dataset for toxic comments classification.
+        Dataset for toxic comments classification.
 
         Args:
         ----
@@ -78,7 +78,7 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
         num_workers: int = 0,
     ):
         """
-        Create PyTorch Lightning DataModule for Toxic Comments dataset.
+        PyTorch Lightning DataModule for Toxic Comments dataset.
 
         Args:
         ----
