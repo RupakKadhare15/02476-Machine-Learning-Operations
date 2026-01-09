@@ -14,11 +14,6 @@ class ToxicCommentsTransformer(pl.LightningModule):
         num_labels: int,
         learning_rate: float = 2e-5,
         adam_epsilon: float = 1e-8,
-        warmup_steps: int = 0,
-        weight_decay: float = 0.0,
-        train_batch_size: int = 32,
-        eval_batch_size: int = 32,
-        eval_splits: Optional[list] = None,
         **kwargs,
     ):
         super().__init__()

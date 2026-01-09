@@ -80,9 +80,9 @@ will check the repositories and the code to verify your answers.
     - @Rupak
 * [ ] Build the docker files locally and make sure they work as intended (M10)
     - @Rupak
-* [ ] Write one or multiple configurations files for your experiments (M11)
+* [X] Write one or multiple configurations files for your experiments (M11)
     - @Levi
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
     - @Levi
 * [ ] Use profiling to optimize your code (M12)
     - @Flo
@@ -92,8 +92,8 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [ ] Consider running a hyperparameter optimization sweep (M14)
     - @Levi
-* [ ] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
-    - We skip this.
+* [X] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
+    - @Levi
 
 ### Week 2
 
