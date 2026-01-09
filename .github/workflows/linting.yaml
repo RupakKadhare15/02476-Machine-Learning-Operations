@@ -34,7 +34,7 @@ jobs:
 
       - name: ruff format
         run: |
-          uv run ruff format --fix .
+          uv run ruff format .
 
       - name: ruff check
         run: |
