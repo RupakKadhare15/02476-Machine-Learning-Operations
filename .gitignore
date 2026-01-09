@@ -1,6 +1,8 @@
 docs/site/
 
+models/
 data/
+outputs/
 
 # test cache
 manual_test/
