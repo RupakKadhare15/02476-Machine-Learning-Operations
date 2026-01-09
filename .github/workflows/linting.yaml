@@ -33,11 +33,10 @@ jobs:
           uv sync --all-extras --dev
           uv pip list
 
+      - name: ruff format
+        run: |
+          uv run ruff format .
 
       - name: ruff check
         run: |
           uv run ruff check .
-
-      - name: ruff format
-        run: |
-          uv run ruff format .
