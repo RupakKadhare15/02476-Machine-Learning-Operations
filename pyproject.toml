@@ -51,6 +51,9 @@ url = "https://download.pytorch.org/whl/cpu"
 explicit = true
 
 [tool.ruff]
+exclude = [
+    "tests",
+]
 line-length = 120
 indent-width = 4
 target-version = "py312"

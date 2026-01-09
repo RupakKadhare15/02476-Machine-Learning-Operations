@@ -1,8 +1,9 @@
-from torch import nn
 import torch
+from torch import nn
 
 
 class Model(nn.Module):
+
     """Just a dummy model to show how to structure your code"""
 
     def __init__(self):

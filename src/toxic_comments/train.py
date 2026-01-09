@@ -1,10 +1,10 @@
-from toxic_comments.model import Model
 from toxic_comments.data import MyDataset
+from toxic_comments.model import Model
 
 
 def train():
-    dataset = MyDataset('data/raw')
-    model = Model()
+    _ = MyDataset('data/raw')
+    _ = Model()
     # add rest of your training code here
 
 
