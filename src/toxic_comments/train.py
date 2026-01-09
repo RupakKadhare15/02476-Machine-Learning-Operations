@@ -1,4 +1,3 @@
-import os
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
 import pytorch_lightning as pl

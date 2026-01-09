@@ -1,11 +1,9 @@
-from torch import nn
 import torch
 import pytorch_lightning as pl
-from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer, get_linear_schedule_with_warmup
+from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTokenizer
 from torch.optim import AdamW
 from collections import defaultdict
-from typing import Optional
-from datetime import datetime
+
 
 class ToxicCommentsTransformer(pl.LightningModule):
     def __init__(
@@ -23,7 +21,9 @@ class ToxicCommentsTransformer(pl.LightningModule):
         id2label = {0: "NON-TOXIC", 1: "TOXIC"}
         label2id = {"NON-TOXIC": 0, "TOXIC": 1}
 
-        self.config = AutoConfig.from_pretrained(model_name_or_path, num_labels=num_labels, id2label=id2label, label2id=label2id)
+        self.config = AutoConfig.from_pretrained(
+            model_name_or_path, num_labels=num_labels, id2label=id2label, label2id=label2id
+        )
         self.model = AutoModelForSequenceClassification.from_pretrained(model_name_or_path, config=self.config)
         self.model.train()  # Ensure model is in training mode
         self.outputs = defaultdict(list)
@@ -50,10 +50,10 @@ class ToxicCommentsTransformer(pl.LightningModule):
             losses = torch.stack([x["loss"] for x in output_list])
             preds = torch.cat([x["preds"] for x in output_list])
             labels = torch.cat([x["labels"] for x in output_list])
-            
+
             avg_loss = losses.mean()
             accuracy = (preds == labels).float().mean()
-            
+
             self.log(f"val_loss_{dataloader_idx}", avg_loss, prog_bar=True)
             self.log(f"val_accuracy_{dataloader_idx}", accuracy, prog_bar=True)
         self.outputs.clear()
@@ -78,5 +78,5 @@ if __name__ == "__main__":
     predictions = outputs.logits
 
     predicted_class_id = predictions.argmax().item()
-    print('Label:', model.model.config.id2label[predicted_class_id])
+    print("Label:", model.model.config.id2label[predicted_class_id])
     print(f"Output shape of model: {model(**inputs).logits.shape}")
