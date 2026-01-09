@@ -73,8 +73,8 @@ class ToxicCommentsTransformer(pl.LightningModule):
             avg_loss = losses.mean()
             accuracy = (preds == labels).float().mean()
 
-            self.log(f'val_loss_{dataloader_idx}', avg_loss, prog_bar=True)
-            self.log(f'val_accuracy_{dataloader_idx}', accuracy, prog_bar=True)
+            self.log("val_loss", avg_loss, prog_bar=True)
+            self.log("val_accuracy", accuracy, prog_bar=True)
         self.outputs.clear()
 
     def configure_optimizers(self):

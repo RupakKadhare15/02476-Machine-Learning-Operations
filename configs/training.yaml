@@ -1,7 +1,11 @@
 batch_size: 32
 max_length: 128
 num_workers: 0
-epochs: 3
+epochs: 2
 model_name_or_path: "vinai/bertweet-base"
 learning_rate: 2e-5
 adam_epsilon: 1e-8
+patience: 3
+wandb:
+  project: "toxic-comments-classification"
+  entity: "mlops-group-100"

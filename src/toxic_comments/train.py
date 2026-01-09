@@ -1,5 +1,12 @@
+import os
 import hydra
+import omegaconf
+import wandb
 import pytorch_lightning as pl
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
+from pytorch_lightning.loggers import WandbLogger
+from dotenv import load_dotenv
+from datetime import datetime
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
@@ -8,6 +15,25 @@ from toxic_comments.model import ToxicCommentsTransformer
 @hydra.main(version_base=None, config_path='../../configs', config_name='training.yaml')
 def main(cfg):
     """Train the model."""
+
+    load_dotenv()  # Load environment variables from .env file
+    wandb.login()
+
+    # convert cfg to a dict
+    cfg_dict =  omegaconf.OmegaConf.to_container(
+        cfg, resolve=True, throw_on_missing=True
+    )
+
+    # Start a new wandb run to track this script.
+    run = wandb.init(
+        # Set the wandb entity where your project will be logged (generally your team name).
+        entity=cfg.wandb.entity,
+        # Set the wandb project where this run will be logged.
+        project=cfg.wandb.project,
+        # Track hyperparameters and run metadata.
+        config=cfg_dict,
+    )
+
     # Initialize datamodule
     datamodule = ToxicCommentsDataModule(
         model_name_or_path=cfg.model_name_or_path,
@@ -26,10 +52,36 @@ def main(cfg):
         adam_epsilon=cfg.adam_epsilon,
     )
 
+
+    early_stopping_callback = EarlyStopping(
+        monitor='val_loss',
+        patience=cfg.patience,
+        verbose=True,
+        mode='min'
+    )
+
+    now = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir.split("outputs/")[-1]
+    checkpoint_callback = ModelCheckpoint(
+        monitor='val_loss',
+        dirpath='models/' + now,
+        filename='best-checkpoint',
+        save_top_k=1,
+        mode='min'
+    )
+
     # Train with PyTorch Lightning Trainer
-    trainer = pl.Trainer(max_epochs=cfg.epochs, limit_train_batches=10, limit_val_batches=10, log_every_n_steps=10)
+    trainer = pl.Trainer(max_epochs=cfg.epochs,
+                        limit_train_batches=10,
+                        limit_val_batches=10,
+                        log_every_n_steps=10,
+                        callbacks=[early_stopping_callback, checkpoint_callback],
+                        logger=WandbLogger(project=cfg.wandb.project),
+    )
     trainer.fit(model, datamodule)
 
+    artifact = wandb.Artifact(name="bertoxic", type="model")
+    artifact.add_file(f"models/{now}/best-checkpoint.ckpt")
+    run.log_artifact(artifact)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
