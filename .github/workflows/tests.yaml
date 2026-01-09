@@ -1,12 +1,13 @@
 name: Unit Tests
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: {}
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
 jobs:
   test:
@@ -24,16 +25,20 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+
+      - name: Install uv
+        run: |
+          python -m pip install -U pip
+          pip install uv
 
       - name: Install dependencies
         run: |
-          python -m pip install -U pip setuptools wheel
-          pip install -r requirements.txt
-          pip list
+          uv sync
+          uv pip list
+
 
 
       - name: Run tests & coverage
         run: |
-          coverage run -m pytest tests/
-          coverage report -m
+          uv run coverage run -m pytest tests/
+          uv run coverage report -m
