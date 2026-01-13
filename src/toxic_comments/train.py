@@ -71,9 +71,6 @@ def main(cfg):
 
     # Train with PyTorch Lightning Trainer
     trainer = pl.Trainer(max_epochs=cfg.epochs,
-                        limit_train_batches=10,
-                        limit_val_batches=10,
-                        log_every_n_steps=10,
                         callbacks=[early_stopping_callback, checkpoint_callback],
                         logger=WandbLogger(project=cfg.wandb.project),
     )
