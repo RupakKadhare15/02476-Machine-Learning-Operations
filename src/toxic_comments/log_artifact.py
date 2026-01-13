@@ -90,6 +90,15 @@ def upload_model_to_registry(
             aliases = ["latest"]
         
         run.log_artifact(artifact, aliases=aliases)
+
+        # Specify the collection and registry to link the artifact to
+        REGISTRY_NAME = "ToxicTweets"  
+        COLLECTION_NAME = "models"
+        target_path=f"wandb-registry-{REGISTRY_NAME}/{COLLECTION_NAME}"
+
+        # Link the artifact to the collection
+        run.link_artifact(artifact = artifact, target_path = target_path)
+
         logger.success(f"Successfully uploaded {model_path.name} to wandb model registry")
         logger.info(f"Artifact name: {artifact_name}")
         logger.info(f"Aliases: {aliases}")
