@@ -76,9 +76,5 @@ def main(cfg):
     )
     trainer.fit(model, datamodule)
 
-    artifact = wandb.Artifact(name="bertoxic", type="model")
-    artifact.add_file(f"models/{now}/best-checkpoint.ckpt")
-    run.log_artifact(artifact)
-
 if __name__ == "__main__":
     main()
