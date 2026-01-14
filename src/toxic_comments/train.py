@@ -2,6 +2,7 @@ import os
 import hydra
 import omegaconf
 import wandb
+import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
