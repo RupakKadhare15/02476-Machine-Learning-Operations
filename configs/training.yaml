@@ -1,7 +1,7 @@
 batch_size: 32
 max_length: 128
-num_workers: 0
-epochs: 2
+num_workers: 10
+epochs: 5
 model_name_or_path: "vinai/bertweet-base"
 learning_rate: 2e-5
 adam_epsilon: 1e-8

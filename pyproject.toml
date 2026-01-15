@@ -25,7 +25,6 @@ dependencies = [
     "loguru>=0.7.3",
     "pandas>=2.3.3",
     "python-dotenv>=1.2.1",
-    "torch>=2.6.0",
     "transformers>=4.57.3",
     "typer==0.15.1",
     "uvicorn==0.34.0",
@@ -47,9 +46,6 @@ dev = [
 
 
 [tool.uv.sources]
-torch = [
-    { index = "pytorch-cpu" },
-]
 torchvision = [
     { index = "pytorch-cpu" },
 ]
@@ -69,7 +65,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["I", "E4", "E7", "E9", "F", "W", "D"]
-ignore = ["D100", "D211", "D212"]
+ignore = ["D100", "D211", "D212", "D401"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
