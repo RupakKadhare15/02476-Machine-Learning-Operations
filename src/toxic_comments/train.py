@@ -86,9 +86,6 @@ def main(cfg):
             active=3,
             repeat=1,
         ),
-        on_trace_ready=torch.profiler.tensorboard_trace_handler(
-            "profiler_logs"
-        ),
         record_shapes=True,
         profile_memory=True,
         with_stack=True,
