@@ -2009,7 +2009,10 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pandas", specifier = ">=2.3.3" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
+<<<<<<< HEAD
     { name = "torch", specifier = ">=2.6.0", index = "https://download.pytorch.org/whl/cpu" },
+=======
+>>>>>>> ba8ccc4 (Setup torch gpu for training)
     { name = "transformers", specifier = ">=4.57.3" },
     { name = "typer", specifier = "==0.15.1" },
     { name = "uvicorn", specifier = "==0.34.0" },
