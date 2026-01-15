@@ -76,6 +76,9 @@ def main(cfg):
             ProfilerActivity.CPU,
             ProfilerActivity.CUDA,
         ],
+        on_trace_ready=torch.profiler.tensorboard_trace_handler(
+        "profiler_logs",
+        worker_name="pl",
         schedule=torch.profiler.schedule(
             wait=1,
             warmup=1,

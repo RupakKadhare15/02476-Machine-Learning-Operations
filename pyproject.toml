@@ -42,6 +42,7 @@ dev = [
     "ruff==0.1.3",
     "mkdocstrings-python==1.12.2",
     "snakeviz>=2.2.2",
+    "tensorboard>=2.20.0",
 ]
 
 
