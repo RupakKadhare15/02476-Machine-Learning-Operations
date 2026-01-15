@@ -1,4 +1,3 @@
-import os
 import hydra
 import omegaconf
 import wandb
@@ -6,7 +5,6 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 from dotenv import load_dotenv
-from datetime import datetime
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
@@ -25,7 +23,7 @@ def main(cfg):
     )
 
     # Start a new wandb run to track this script.
-    run = wandb.init(
+    wandb.init(
         # Set the wandb entity where your project will be logged (generally your team name).
         entity=cfg.wandb.entity,
         # Set the wandb project where this run will be logged.
