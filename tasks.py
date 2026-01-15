@@ -21,6 +21,22 @@ def train(ctx: Context) -> None:
     ctx.run(f'uv run src/{PROJECT_NAME}/log_artifact.py', echo=True, pty=not WINDOWS)
 
 
+
+@task
+def train_gpu(ctx: Context) -> None:
+    """Train model."""
+    ctx.run('module load cuda/12.8.0', echo=True, pty=not WINDOWS)
+    ctx.run(f'uv run src/{PROJECT_NAME}/train.py', echo=True, pty=not WINDOWS)
+    ctx.run(f'uv run src/{PROJECT_NAME}/log_artifact.py', echo=True, pty=not WINDOWS)
+
+
+@task
+def eval_gpu(ctx: Context) -> None:
+    """Evaluate model."""
+    ctx.run('module load cuda/12.8.0', echo=True, pty=not WINDOWS)
+    ctx.run(f'uv run src/{PROJECT_NAME}/evaluate.py', echo=True, pty=not WINDOWS)
+
+
 @task
 def test(ctx: Context) -> None:
     """Run tests."""

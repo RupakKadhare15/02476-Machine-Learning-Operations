@@ -71,9 +71,9 @@ class ToxicCommentsTransformer(pl.LightningModule):
 
         labels = batch['labels']
 
-        self.log("test_loss", test_loss, prog_bar=True)
+        self.log("test_loss", test_loss)
         accuracy = (preds == labels).float().mean()
-        self.log("test_accuracy", accuracy, prog_bar=True)
+        self.log("test_accuracy", accuracy)
 
     def on_validation_epoch_end(self):
         """Compute and log validation metrics at the end of the epoch."""

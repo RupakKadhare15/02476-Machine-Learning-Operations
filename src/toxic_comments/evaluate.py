@@ -22,7 +22,7 @@ def main(cfg):
 
         # initialize the Trainer
         trainer = Trainer(logger=WandbLogger(project=cfg.wandb.project))
-        dm = ToxicCommentsDataModule()
+        dm = ToxicCommentsDataModule(num_workers=cfg.num_workers)
 
         # test the model
         trainer.test(model,dm)
