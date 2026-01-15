@@ -71,30 +71,24 @@ def main(cfg):
         mode='min'
     )
 
-    # Set up profiler
-    profiler = PyTorchProfiler(
-        activities=[
-            ProfilerActivity.CPU,
-            ProfilerActivity.CUDA,
-        ],
-        dirpath="profiler_logs",
-        filename="pl_profiler",
-        schedule=torch.profiler.schedule(
-            wait=1,
-            warmup=1,
-            active=3,
-            repeat=1,
-        ),
-        record_shapes=True,
-        profile_memory=True,
-        with_stack=True,
-    )
-
-    # Set up TensorBoard logger
-    tb_logger = TensorBoardLogger(
-        save_dir="profiler_logs",
-        name="tb",
-    )
+# Set up profiler
+profiler = PyTorchProfiler(
+    activities=[
+        ProfilerActivity.CPU,
+        ProfilerActivity.CUDA,
+    ],
+    schedule=torch.profiler.schedule(
+        wait=1,
+        warmup=1,
+        active=3,
+        repeat=1,
+    ),
+    on_trace_ready=torch.profiler.tensorboard_trace_handler("profiler_logs"),
+    record_shapes=True,
+    profile_memory=True,
+    with_stack=True,
+    use_cuda=True,
+)
 
 
 
@@ -102,7 +96,7 @@ def main(cfg):
     trainer = pl.Trainer(max_epochs=1,
                         limit_train_batches=10,
                         callbacks=[early_stopping_callback, checkpoint_callback],
-                        logger=[WandbLogger(project=cfg.wandb.project), tb_logger],
+                        logger=WandbLogger(project=cfg.wandb.project),
                         profiler=profiler,
                         num_sanity_val_steps=0,
     )
