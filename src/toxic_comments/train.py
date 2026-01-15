@@ -102,9 +102,8 @@ def main(cfg):
     trainer = pl.Trainer(max_epochs=1,
                         limit_train_batches=10,
                         callbacks=[early_stopping_callback, checkpoint_callback],
-                        logger=WandbLogger(project=cfg.wandb.project),
+                        logger=[WandbLogger(project=cfg.wandb.project), tb_logger],
                         profiler=profiler,
-                        logger=tb_logger,
                         num_sanity_val_steps=0,
     )
     trainer.fit(model, datamodule)
