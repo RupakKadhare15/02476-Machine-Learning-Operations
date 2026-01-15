@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
+from torch.profiler import ProfilerActivity
 from dotenv import load_dotenv
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
@@ -71,27 +72,33 @@ def main(cfg):
 
     # Set up profiler
     profiler = PyTorchProfiler(
-    activities=["cpu", "cuda"],
-    schedule=torch.profiler.schedule(
-        wait=1,
-        warmup=1,
-        active=3,
-        repeat=1,
-    ),
-    on_trace_ready=torch.profiler.tensorboard_trace_handler(
-        "profiler_logs"
-    ),
-    record_shapes=True,
-    profile_memory=True,
-    with_stack=True,
-)
+        activities=[
+            ProfilerActivity.CPU,
+            ProfilerActivity.CUDA,
+        ],
+        schedule=torch.profiler.schedule(
+            wait=1,
+            warmup=1,
+            active=3,
+            repeat=1,
+        ),
+        on_trace_ready=torch.profiler.tensorboard_trace_handler(
+            "profiler_logs"
+        ),
+        record_shapes=True,
+        profile_memory=True,
+        with_stack=True,
+    )
+
 
 
     # Train with PyTorch Lightning Trainer
-    trainer = pl.Trainer(max_epochs=cfg.epochs,
+    trainer = pl.Trainer(max_epochs=1,
+                        limit_train_batches=10,
                         callbacks=[early_stopping_callback, checkpoint_callback],
                         logger=WandbLogger(project=cfg.wandb.project),
                         profiler=profiler,
+                        num_sanity_val_steps=0,
     )
     trainer.fit(model, datamodule)
 
