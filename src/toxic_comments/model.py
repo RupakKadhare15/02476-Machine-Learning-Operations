@@ -63,6 +63,18 @@ class ToxicCommentsTransformer(pl.LightningModule):
 
         self.outputs[dataloader_idx].append({'loss': val_loss, 'preds': preds, 'labels': labels})
 
+    def test_step(self, batch, batch_idx):
+        """Perform a test step."""
+        outputs = self(**batch)
+        test_loss, logits = outputs[:2]
+        preds = torch.argmax(logits, axis=1)
+
+        labels = batch['labels']
+
+        self.log("test_loss", test_loss, prog_bar=True)
+        accuracy = (preds == labels).float().mean()
+        self.log("test_accuracy", accuracy, prog_bar=True)
+
     def on_validation_epoch_end(self):
         """Compute and log validation metrics at the end of the epoch."""
         for dataloader_idx, output_list in self.outputs.items():
