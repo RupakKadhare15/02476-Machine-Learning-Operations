@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 from pytorch_lightning.profilers import PyTorchProfiler
+from pytorch_lightning.loggers import TensorBoardLogger
 from torch.profiler import ProfilerActivity
 from dotenv import load_dotenv
 
@@ -89,6 +90,12 @@ def main(cfg):
         with_stack=True,
     )
 
+    # Set up TensorBoard logger
+    tb_logger = TensorBoardLogger(
+        save_dir="profiler_logs",
+        name="tb",
+    )
+
 
 
     # Train with PyTorch Lightning Trainer
@@ -97,6 +104,7 @@ def main(cfg):
                         callbacks=[early_stopping_callback, checkpoint_callback],
                         logger=WandbLogger(project=cfg.wandb.project),
                         profiler=profiler,
+                        logger=tb_logger,
                         num_sanity_val_steps=0,
     )
     trainer.fit(model, datamodule)
