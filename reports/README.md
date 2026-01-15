@@ -58,10 +58,10 @@ will check the repositories and the code to verify your answers.
     - @Flo
 * [X] Create the initial file structure using cookiecutter with an appropriate template (M6) 
     - @FLo
-* [ ] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) 
+* [X] Fill out the `data.py` file such that it downloads whatever data you need and preprocesses it (if necessary) (M6) 
     - Implement function that returns dataset as a Transformers Dataset object
     - @Rupak
-* [ ] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
+* [X] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
     - @Levi
 * [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
@@ -80,18 +80,21 @@ will check the repositories and the code to verify your answers.
     - @Rupak
 * [X] Build the docker files locally and make sure they work as intended (M10)
     - @Rupak
-* [ ] Write one or multiple configurations files for your experiments (M11)
+* [X] Write one or multiple configurations files for your experiments (M11)
     - @Levi
-* [ ] Used Hydra to load the configurations and manage your hyperparameters (M11)
+* [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
     - @Levi
 * [ ] Use profiling to optimize your code (M12)
     - @Flo
-* [ ] Use logging to log important events in your code (M14)
+* [X] Use logging to log important events in your code (M14)
     - @Levi
-* [ ] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
+    - Results are logged to Weights & Biases
+* [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
     - @Levi
 * [ ] Consider running a hyperparameter optimization sweep (M14)
     - Skipped because we already had adequate results with manual tuning.
+* [X] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
+    - @Levi
 * [X] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
     - @Levi
 
