@@ -1,6 +1,32 @@
 outs:
-- md5: 64931104df95fa8d43825fb847eaf4eb.dir
-  size: 74413849
-  nfiles: 4
-  hash: md5
+- hash: md5
   path: data
+  files:
+  - relpath: data.zip
+    md5: 880e0f562c18242133cd1edd67834f84
+    size: 21446622
+    cloud:
+      remote_storage:
+        etag: 08989883b8b38d92031001
+        version_id: '1768475181763608'
+  - relpath: test.csv
+    md5: 6f359c32f9dc0045c786cd5676859177
+    size: 6649710
+    cloud:
+      remote_storage:
+        etag: 08bbaff5afb38d92031001
+        version_id: '1768475164759995'
+  - relpath: train.csv
+    md5: 12f1201da831f74562efa2488dab4b6e
+    size: 39709221
+    cloud:
+      remote_storage:
+        etag: 0897e6f6e4b38d92031001
+        version_id: '1768475275932439'
+  - relpath: validation.csv
+    md5: 657c63c27fa9ef4c88d0cb3acff71f79
+    size: 6608296
+    cloud:
+      remote_storage:
+        etag: 08a5c8d192b38d92031001
+        version_id: '1768475103355941'
