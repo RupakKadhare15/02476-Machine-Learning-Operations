@@ -36,9 +36,15 @@ jobs:
           uv sync
           uv pip list
 
-
-
-      - name: Run tests & coverage
+      - name: Run tests with coverage
         run: |
-          uv run coverage run -m pytest tests/
+          # Tell coverage where your source code is
+          uv run coverage run --source=. -m pytest tests/
+          
+      - name: Generate coverage report
+        run: |
           uv run coverage report -m
+          
+      - name: Generate coverage XML (for badges)
+        run: |
+          uv run coverage xml
