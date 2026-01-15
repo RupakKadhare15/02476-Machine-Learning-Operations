@@ -71,24 +71,24 @@ def main(cfg):
         mode='min'
     )
 
-# Set up profiler
-profiler = PyTorchProfiler(
-    activities=[
-        ProfilerActivity.CPU,
-        ProfilerActivity.CUDA,
-    ],
-    schedule=torch.profiler.schedule(
-        wait=1,
-        warmup=1,
-        active=3,
-        repeat=1,
-    ),
-    on_trace_ready=torch.profiler.tensorboard_trace_handler("profiler_logs"),
-    record_shapes=True,
-    profile_memory=True,
-    with_stack=True,
-    use_cuda=True,
-)
+    # Set up profiler
+    profiler = PyTorchProfiler(
+        activities=[
+            ProfilerActivity.CPU,
+            ProfilerActivity.CUDA,
+        ],
+        schedule=torch.profiler.schedule(
+            wait=1,
+            warmup=1,
+            active=3,
+            repeat=1,
+        ),
+        on_trace_ready=torch.profiler.tensorboard_trace_handler("profiler_logs"),
+        record_shapes=True,
+        profile_memory=True,
+        with_stack=True,
+        use_cuda=True,
+    )
 
 
 
