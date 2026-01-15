@@ -9,6 +9,7 @@ from pytorch_lightning.profilers import PyTorchProfiler
 from pytorch_lightning.loggers import TensorBoardLogger
 from torch.profiler import ProfilerActivity
 from dotenv import load_dotenv
+from datetime import datetime
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
@@ -71,24 +72,33 @@ def main(cfg):
         mode='min'
     )
 
-    # Set up profiler
+
+    # Create timestamp for unique profiler directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    profiler_dir = f"profiler_logs/{timestamp}"
+
+    # Set up profiler with timestamped directory
     profiler = PyTorchProfiler(
         activities=[
             ProfilerActivity.CPU,
             ProfilerActivity.CUDA,
         ],
+        dirpath=profiler_dir,  # Use timestamped directory
+        filename="pl_profiler",
         schedule=torch.profiler.schedule(
             wait=1,
             warmup=1,
             active=3,
             repeat=1,
         ),
-        on_trace_ready=torch.profiler.tensorboard_trace_handler("profiler_logs"),
         record_shapes=True,
         profile_memory=True,
         with_stack=True,
-        use_cuda=True,
+        on_trace_ready=torch.profiler.tensorboard_trace_handler(profiler_dir),
     )
+
+
+
 
 
 
