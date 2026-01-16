@@ -1,20 +1,31 @@
 """
-Test file for data.py.
+Test file for data.py and the data files (test.csv, train.csv, validation.csv).
 """
-from unittest.mock import Mock, patch, mock_open
+import os
+import sys
+import pandas as pd
+import numpy as np
+from pathlib import Path
+from unittest.mock import Mock, PropertyMock, patch, mock_open
+
+# Add the src directory to Python path so we can import toxic_comments.data
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+# Define data directory
+DATA_DIR = Path(__file__).parent.parent / 'data'
 
 def test_module_can_be_imported():
     """
     Test that the data module can be imported.
     """
-    import data
+    from toxic_comments import data
     assert True  # If we get here, import succeeded
 
 def test_constants_exist():
     """
     Verify that required constants are defined.
     """
-    import data
+    from toxic_comments import data
     
     # Check that constants are defined
     assert hasattr(data, 'DRIVE_ID'), "DRIVE_ID constant is missing"
@@ -28,7 +39,7 @@ def test_constant_values():
     """
     Verify that constants have the expected values.
     """
-    import data
+    from toxic_comments import data
     from pathlib import Path
 
     # Verify specific values
@@ -45,7 +56,7 @@ def test_constant_values():
 def test_main_function_exists():
     """Test that main function exists."""
     try:
-        import data
+        from toxic_comments import data
         assert hasattr(data, 'main')
         assert callable(data.main)
         print("Main function test passed")
@@ -56,18 +67,26 @@ def test_data_directory_is_created():
     """
     Verify that the script creates the necessary directory structure.
     """
-    import data
+    from toxic_comments import data
+
+    # Create a mock that behaves like a Path object
+    mock_path = Mock()
     
-    # Mock Path.mkdir to test it's called correctly
-    with patch('data.DATA_PATH.mkdir') as mock_mkdir:
-        # Mock everything else to isolate the mkdir test
-        with patch('data.requests.Session'):
-            with patch('data.shutil.unpack_archive'):
+    # Mock the mkdir method
+    mock_path.mkdir = Mock()
+    
+    # Mock the __truediv__ method to support / operator
+    mock_path.__truediv__ = Mock(return_value=mock_path)  # Returns itself or another mock
+    
+    # Replace the entire DATA_PATH with our mock
+    with patch('toxic_comments.data.DATA_PATH', mock_path):
+        with patch('toxic_comments.data.requests.Session'):
+            with patch('toxic_comments.data.shutil.unpack_archive'):
                 with patch('builtins.open', mock_open()):
                     data.main()
-        
-        # Verify mkdir was called with correct arguments
-        mock_mkdir.assert_called_once_with(parents=True, exist_ok=True)
+    
+    # Verify mkdir was called with correct arguments
+    mock_path.mkdir.assert_called_once_with(parents=True, exist_ok=True)
         
         # parents=True ensures parent directories are created if needed
         # exist_ok=True prevents errors if directory already exists
@@ -77,11 +96,21 @@ def test_google_drive_api_call():
     Verify the script makes the correct API request to Google Drive.
     This tests the URL, parameters, and streaming setup.
     """
-    import data
+    from toxic_comments import data
+
+    # Create a mock that behaves like a Path object
+    mock_path = Mock()
     
-    with patch('data.DATA_PATH.mkdir'):
-        with patch('data.requests.Session') as mock_session_class:
-            with patch('data.shutil.unpack_archive'):
+    # Mock the mkdir method
+    mock_path.mkdir = Mock()
+    
+    # Mock the __truediv__ method to support / operator
+    mock_path.__truediv__ = Mock(return_value=mock_path)  # Returns itself or another mock
+    
+    # Replace the entire DATA_PATH with our mock
+    with patch('toxic_comments.data.DATA_PATH', mock_path):
+        with patch('toxic_comments.data.requests.Session') as mock_session_class:
+            with patch('toxic_comments.data.shutil.unpack_archive'):
                 with patch('builtins.open', mock_open()):
                     # Setup mock session
                     mock_session = Mock()
@@ -105,11 +134,21 @@ def test_archive_extraction():
     Why: Verify that after download, the zip file is extracted.
     Tests the final step of the script.
     """
-    import data
+    from toxic_comments import data
 
-    with patch('data.DATA_PATH.mkdir'):
-        with patch('data.requests.Session'):
-            with patch('data.shutil.unpack_archive') as mock_unpack:
+    # Create a mock that behaves like a Path object
+    mock_path = Mock()
+    
+    # Mock the mkdir method
+    mock_path.mkdir = Mock()
+    
+    # Mock the __truediv__ method to support / operator
+    mock_path.__truediv__ = Mock(return_value=mock_path)  # Returns itself or another mock
+    
+    # Replace the entire DATA_PATH with our mock
+    with patch('toxic_comments.data.DATA_PATH', mock_path):
+        with patch('toxic_comments.data.requests.Session'):
+            with patch('toxic_comments.data.shutil.unpack_archive') as mock_unpack:
                 with patch('builtins.open', mock_open()):
                     data.main()
                     
