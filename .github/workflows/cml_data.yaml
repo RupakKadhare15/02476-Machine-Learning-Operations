@@ -1,16 +1,10 @@
 name: Data Changes Workflow
 
 on:
-  push:
-    branches:
-      - main
-      - levi
-    paths:
-      - '**.dvc'
-      - '.dvc/config'
   pull_request:
     branches:
       - main
+      - levi
     paths:
       - '**.dvc'
       - '.dvc/config'
