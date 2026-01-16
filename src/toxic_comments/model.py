@@ -51,6 +51,7 @@ class ToxicCommentsTransformer(pl.LightningModule):
         """Perform a training step."""
         outputs = self(**batch)
         loss = outputs[0]
+        self.log("train_loss", loss, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
