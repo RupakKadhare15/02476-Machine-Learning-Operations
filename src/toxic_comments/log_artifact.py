@@ -46,7 +46,7 @@ def find_latest_model(model_dir: str = "models", extensions: list[str] = None) -
 
 def upload_model_to_registry(
     model_path: Path,
-    artifact_name: str = "mnist-classifier",
+    artifact_name: str = "bert-toxic-comments-classifier",
     artifact_type: str = "model",
     description: str = None,
     aliases: list[str] = None,
