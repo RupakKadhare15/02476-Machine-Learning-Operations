@@ -5,6 +5,10 @@ outs:
   - relpath: asd.txt
     md5: d41d8cd98f00b204e9800998ecf8427e
     size: 0
+    cloud:
+      remote_storage:
+        etag: 08a7d5f9d7da8f92031001
+        version_id: '1768554437175975'
   - relpath: data.zip
     md5: 880e0f562c18242133cd1edd67834f84
     size: 21446622
