@@ -39,10 +39,12 @@ jobs:
 
       - name: Auth SA
         run: |
-              echo '${{ secrets.GCP_SA_CREDENTIALS }}' > $GOOGLE_APPLICATION_CREDENTIALS
-              export GOOGLE_APPLICATION_CREDENTIALS="$GOOGLE_APPLICATION_CREDENTIALS"
+              echo '${{ secrets.GCP_SA_CREDENTIALS }}' > /tmp/gcp-key.json
+              export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp-key.json"
 
       - name: Pull data from DVC
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp-key.json
         run: |
           uv run dvc pull
 
