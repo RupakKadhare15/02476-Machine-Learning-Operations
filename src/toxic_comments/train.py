@@ -18,7 +18,7 @@ def main(cfg):
     wandb.login()
 
     # convert cfg to a dict
-    cfg_dict =  omegaconf.OmegaConf.to_container(
+    cfg_dict = omegaconf.OmegaConf.to_container(
         cfg, resolve=True, throw_on_missing=True
     )
 
