@@ -84,7 +84,7 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
     - @Levi
-* [ ] Use profiling to optimize your code (M12)
+* ([X]) Use profiling to optimize your code (M12)
     - @Flo
 * [X] Use logging to log important events in your code (M14)
     - @Levi
@@ -100,15 +100,15 @@ will check the repositories and the code to verify your answers.
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16) 
+* [X] Write unit tests related to the data part of your code (M16) 
     - @Flo
-* [ ] Write unit tests related to model construction and or model training (M16) 
+* [X] Write unit tests related to model construction and or model training (M16) 
     - @Flo
-* [ ] Calculate the code coverage (M16)
+* [X] Calculate the code coverage (M16)
     - @Flo
-* [ ] Get some continuous integration running on the GitHub repository (M17)
+* [X] Get some continuous integration running on the GitHub repository (M17)
     - @Flo
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [X] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
     - @Flo
 * [X] Add a linting step to your continuous integration (M17)
 * [X] Add pre-commit hooks to your version control setup (M18)
