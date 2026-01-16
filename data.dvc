@@ -16,13 +16,6 @@ outs:
       remote_storage:
         etag: 08bbaff5afb38d92031001
         version_id: '1768475164759995'
-  - relpath: test.txt
-    md5: d41d8cd98f00b204e9800998ecf8427e
-    size: 0
-    cloud:
-      remote_storage:
-        etag: 08e8869cebd78f92031001
-        version_id: '1768553672278888'
   - relpath: train.csv
     md5: 12f1201da831f74562efa2488dab4b6e
     size: 39709221
