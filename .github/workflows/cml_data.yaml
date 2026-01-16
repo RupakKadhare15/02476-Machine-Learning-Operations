@@ -37,16 +37,14 @@ jobs:
         run: |
           uv sync
 
-      - name: Auth SA
-        run: |
-              echo '${{ secrets.GCP_SA_CREDENTIALS }}' > /tmp/gcp-key.json
-              export GOOGLE_APPLICATION_CREDENTIALS="/tmp/gcp-key.json"
+      - name: Auth with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Pull data from DVC
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp-key.json
+      - name: Pull data
         run: |
-          uv run dvc pull
+          dvc pull --no-run-cache
 
       - name: Check data statistics
         run: |
