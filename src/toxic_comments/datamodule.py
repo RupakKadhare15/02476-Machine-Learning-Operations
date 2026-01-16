@@ -9,7 +9,6 @@ from transformers import AutoTokenizer
 
 
 class ToxicCommentsDataset(Dataset):
-
     """Dataset for toxic comments classification."""
 
     def __init__(self, csv_file: str, tokenizer, max_length: int = 128):
@@ -65,7 +64,6 @@ class ToxicCommentsDataset(Dataset):
 
 
 class ToxicCommentsDataModule(pl.LightningDataModule):
-
     """PyTorch Lightning DataModule for Toxic Comments dataset."""
 
     def __init__(
@@ -162,9 +160,9 @@ if __name__ == '__main__':
     train_loader = datamodule.train_dataloader()
     batch = next(iter(train_loader))
 
-    print(f"Input IDs shape: {batch['input_ids'].shape}")
-    print(f"Attention mask shape: {batch['attention_mask'].shape}")
-    print(f"Labels shape: {batch['labels'].shape}")
-    print(f"Sample label: {batch['labels'][0]}")
+    print(f'Input IDs shape: {batch["input_ids"].shape}')
+    print(f'Attention mask shape: {batch["attention_mask"].shape}')
+    print(f'Labels shape: {batch["labels"].shape}')
+    print(f'Sample label: {batch["labels"][0]}')
     print(f'\nTrain dataset size: {len(datamodule.train_dataset)}')
     print(f'Validation dataset size: {len(datamodule.val_dataset)}')

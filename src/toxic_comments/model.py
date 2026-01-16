@@ -7,7 +7,6 @@ from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTok
 
 
 class ToxicCommentsTransformer(pl.LightningModule):
-
     """PyTorch Lightning Module for toxic comments classification using a transformer model."""
 
     def __init__(
@@ -73,8 +72,8 @@ class ToxicCommentsTransformer(pl.LightningModule):
             avg_loss = losses.mean()
             accuracy = (preds == labels).float().mean()
 
-            self.log("val_loss", avg_loss, prog_bar=True)
-            self.log("val_accuracy", accuracy, prog_bar=True)
+            self.log('val_loss', avg_loss, prog_bar=True)
+            self.log('val_accuracy', accuracy, prog_bar=True)
         self.outputs.clear()
 
     def configure_optimizers(self):
