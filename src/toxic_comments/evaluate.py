@@ -10,6 +10,7 @@ from toxic_comments.datamodule import ToxicCommentsDataModule
 
 @hydra.main(version_base=None, config_path='../../configs', config_name='evaluation.yaml')
 def main(cfg):
+    """Evaluate the model using the best checkpoint from WandB Artifacts."""
     with wandb.init(
         project=cfg.wandb.project,
         entity=cfg.wandb.entity,
