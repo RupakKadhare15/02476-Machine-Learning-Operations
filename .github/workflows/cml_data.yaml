@@ -14,7 +14,6 @@ on:
     paths:
       - '**.dvc'
       - '.dvc/config'
-  workflow_dispatch: {}
     
 
 jobs:
