@@ -1,7 +1,6 @@
 name: Data Changes Workflow
 
 on:
-  workflow_dispatch: {}
   push:
     branches:
       - main
@@ -15,6 +14,8 @@ on:
     paths:
       - '**.dvc'
       - '.dvc/config'
+  workflow_dispatch: {}
+    
 
 jobs:
   data-validation:
