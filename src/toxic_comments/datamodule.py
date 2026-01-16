@@ -9,6 +9,7 @@ from transformers import AutoTokenizer
 
 
 class ToxicCommentsDataset(Dataset):
+
     """Dataset for toxic comments classification."""
 
     def __init__(self, csv_file: str, tokenizer, max_length: int = 128):
@@ -20,6 +21,7 @@ class ToxicCommentsDataset(Dataset):
             csv_file: Path to the CSV file containing comment_text and toxic columns
             tokenizer: Hugging Face tokenizer instance
             max_length: Maximum sequence length for tokenization
+
         """
         self.data = pd.read_csv(csv_file)
         self.tokenizer = tokenizer
@@ -64,6 +66,7 @@ class ToxicCommentsDataset(Dataset):
 
 
 class ToxicCommentsDataModule(pl.LightningDataModule):
+
     """PyTorch Lightning DataModule for Toxic Comments dataset."""
 
     def __init__(
@@ -86,6 +89,7 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
             eval_batch_size: Batch size for validation and testing
             max_length: Maximum sequence length for tokenization
             num_workers: Number of workers for data loading
+
         """
         super().__init__()
         self.data_dir = Path(data_dir)
@@ -109,6 +113,7 @@ class ToxicCommentsDataModule(pl.LightningDataModule):
         Args:
         ----
             stage: Either 'fit', 'validate', 'test', or 'predict'
+
         """
         if stage == 'fit' or stage is None:
             self.train_dataset = ToxicCommentsDataset(

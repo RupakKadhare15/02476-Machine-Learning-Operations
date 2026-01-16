@@ -1,11 +1,11 @@
 # tests/test_model.py
-import pytest
-import torch
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
-
 # Add src to path
 import sys
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pytest
+import torch
 
 sys.path.insert(0, Path(__file__).parent.parent / 'src')
 
@@ -13,6 +13,7 @@ from toxic_comments.model import ToxicCommentsTransformer
 
 
 class TestForwardPass:
+
     """Test suite for forward pass."""
 
     @pytest.fixture
@@ -125,6 +126,7 @@ class TestForwardPass:
 
 
 class TestModelInitialization:
+
     """Test suite for model initialization."""
 
     def test_basic_initialization(self):
@@ -219,7 +221,7 @@ class TestModelInitialization:
             mock_model.return_value = mock_model_instance
             mock_config.return_value = Mock()
 
-            model = ToxicCommentsTransformer(model_name_or_path='vinai/bertweet-base', num_labels=2)
+            _ = ToxicCommentsTransformer(model_name_or_path='vinai/bertweet-base', num_labels=2)
 
             # Check model.train() was called
             mock_model_instance.train.assert_called_once()
@@ -248,6 +250,7 @@ class TestModelInitialization:
 
 
 class TestTrainingStep:
+
     """Test suite for training step."""
 
     @pytest.fixture

@@ -7,6 +7,7 @@ from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTok
 
 
 class ToxicCommentsTransformer(pl.LightningModule):
+
     """PyTorch Lightning Module for toxic comments classification using a transformer model."""
 
     def __init__(
@@ -27,6 +28,7 @@ class ToxicCommentsTransformer(pl.LightningModule):
             learning_rate: Learning rate for the optimizer
             adam_epsilon: Epsilon value for the AdamW optimizer
             **kwargs: Additional keyword arguments
+
         """
         super().__init__()
 

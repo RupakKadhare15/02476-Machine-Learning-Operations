@@ -1,10 +1,10 @@
 import hydra
 import omegaconf
-import wandb
 import pytorch_lightning as pl
+import wandb
+from dotenv import load_dotenv
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
-from dotenv import load_dotenv
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
@@ -13,7 +13,6 @@ from toxic_comments.model import ToxicCommentsTransformer
 @hydra.main(version_base=None, config_path='../../configs', config_name='training.yaml')
 def main(cfg):
     """Train the model."""
-
     load_dotenv()  # Load environment variables from .env file
     wandb.login()
 

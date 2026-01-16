@@ -2,14 +2,16 @@
 
 import os
 from pathlib import Path
-from loguru import logger
+
+import hydra
 import wandb
 from dotenv import load_dotenv
-import hydra
+from loguru import logger
 
 
 def find_latest_model(model_dir: str = 'models', extensions: list[str] = None) -> Path | None:
-    """Find the latest model file in the specified directory.
+    """
+    Find the latest model file in the specified directory.
 
     Args:
         model_dir: Directory to search for models (default: "models")
@@ -17,6 +19,7 @@ def find_latest_model(model_dir: str = 'models', extensions: list[str] = None) -
 
     Returns:
         Path to the latest model file, or None if no models found
+
     """
     if extensions is None:
         extensions = ['.ckpt', '.pth', '.pt']
@@ -53,7 +56,8 @@ def upload_model_to_registry(
     aliases: list[str] = None,
     metadata: dict = None,
 ) -> None:
-    """Upload a model to wandb model registry.
+    """
+    Upload a model to wandb model registry.
 
     Args:
         model_path: Path to the model file
@@ -62,6 +66,7 @@ def upload_model_to_registry(
         description: Optional description for the artifact
         aliases: Optional list of aliases (e.g., ["latest", "production"])
         metadata: Optional metadata dictionary
+
     """
     if not model_path.exists():
         logger.error(f'Model file {model_path} does not exist')

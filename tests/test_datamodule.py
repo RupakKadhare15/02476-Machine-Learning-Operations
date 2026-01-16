@@ -1,17 +1,17 @@
 # tests/test_datamodule.py
-import pytest
-import torch
-import pandas as pd
-from pathlib import Path
-from unittest.mock import Mock, patch, mock_open, MagicMock
-import tempfile
-
 # Add src to path
 import sys
+import tempfile
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+import pandas as pd
+import pytest
+import torch
 
 sys.path.insert(0, Path(__file__).parent.parent / 'src')
 
-from toxic_comments.datamodule import ToxicCommentsDataset, ToxicCommentsDataModule
+from toxic_comments.datamodule import ToxicCommentsDataModule, ToxicCommentsDataset
 
 
 @pytest.fixture
@@ -31,6 +31,7 @@ def temp_data_dir():
 
 
 class TestToxicCommentsDataset:
+
     """Test suite for ToxicCommentsDataset class."""
 
     @pytest.fixture
@@ -140,6 +141,7 @@ class TestToxicCommentsDataset:
 
 
 class TestToxicCommentsDataModule:
+
     """Test suite for ToxicCommentsDataModule class."""
 
     @pytest.fixture
@@ -268,6 +270,7 @@ class TestToxicCommentsDataModule:
 
 
 class TestIntegration:
+
     """Integration tests for the full data pipeline."""
 
     @pytest.fixture
