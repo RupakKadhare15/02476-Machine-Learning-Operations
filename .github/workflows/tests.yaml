@@ -1,13 +1,12 @@
 name: Unit Tests
 
-on: {}
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+        - Rupak-Docker
+  pull_request:
+    branches:
+        - main
 
 jobs:
   test:
