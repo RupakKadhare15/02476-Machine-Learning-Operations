@@ -62,3 +62,7 @@ jobs:
       - name: Generate coverage report
         run: |
           uv run coverage report -m
+          
+      - name: Generate coverage XML (for badges)
+        run: |
+          uv run coverage xml
