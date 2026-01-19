@@ -63,7 +63,7 @@ will check the repositories and the code to verify your answers.
     - @Rupak
 * [X] Add a model to `model.py` and a training procedure to `train.py` and get that running (M6)
     - @Levi
-* [ ] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
+* [-] Remember to fill out the `requirements.txt` and `requirements_dev.txt` file with whatever dependencies that you
     are using (M2+M6)
     - Skipped for now as we are using uv as a dependency manager.
 * [X] Remember to comply with good coding practices (`pep8`) while doing the project (M7)
@@ -72,9 +72,11 @@ will check the repositories and the code to verify your answers.
 * [X] Do a bit of code typing and remember to document essential parts of your code (M7)
     - @everyone
     - E.g.: use type hints in function signatures (arg+return) and docstrings for classes/functions
-* [ ] Setup version control for your data or part of your data (M8)
+* [X] Setup version control for your data or part of your data (M8)
+    - Data is version controlled using DVC in a GCP Bucket.
     - @Levi
-* [ ] Add command line interfaces and project commands to your code where it makes sense (M9)
+* [X] Add command line interfaces and project commands to your code where it makes sense (M9)
+    - Train and evaluation scripts are wrapped into invoke tasks. Arguments are passed via config files using Hydra.
     - @Levi
 * [X] Construct one or multiple docker files for your code (M10)
     - @Rupak
@@ -84,14 +86,14 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [X] Used Hydra to load the configurations and manage your hyperparameters (M11)
     - @Levi
-* [ ] Use profiling to optimize your code (M12)
+* ([X]) Use profiling to optimize your code (M12)
     - @Flo
 * [X] Use logging to log important events in your code (M14)
     - @Levi
     - Results are logged to Weights & Biases
 * [X] Use Weights & Biases to log training progress and other important metrics/artifacts in your code (M14)
     - @Levi
-* [ ] Consider running a hyperparameter optimization sweep (M14)
+* [-] Consider running a hyperparameter optimization sweep (M14)
     - Skipped because we already had adequate results with manual tuning.
 * [X] Use PyTorch-lightning (if applicable) to reduce the amount of boilerplate in your code (M15)
     - @Levi
@@ -100,23 +102,23 @@ will check the repositories and the code to verify your answers.
 
 ### Week 2
 
-* [ ] Write unit tests related to the data part of your code (M16) 
+* [X] Write unit tests related to the data part of your code (M16) 
     - @Flo
-* [ ] Write unit tests related to model construction and or model training (M16) 
+* [X] Write unit tests related to model construction and or model training (M16) 
     - @Flo
-* [ ] Calculate the code coverage (M16)
+* [X] Calculate the code coverage (M16)
     - @Flo
-* [ ] Get some continuous integration running on the GitHub repository (M17)
+* [X] Get some continuous integration running on the GitHub repository (M17)
     - @Flo
-* [ ] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
+* [X] Add caching and multi-os/python/pytorch testing to your continuous integration (M17)
     - @Flo
 * [X] Add a linting step to your continuous integration (M17)
 * [X] Add pre-commit hooks to your version control setup (M18)
-* [ ] Add a continues workflow that triggers when data changes (M19)
+* [X] Add a continues workflow that triggers when data changes (M19)
     - @Levi
 * [ ] Add a continues workflow that triggers when changes to the model registry is made (M19)
     - @Levi
-* [ ] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
+* [X] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
     - @Levi
 * [ ] Create a trigger workflow for automatically building your docker images (M21)
     - @Levi
