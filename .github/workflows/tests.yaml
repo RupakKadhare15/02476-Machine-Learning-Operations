@@ -45,6 +45,15 @@ jobs:
           uv pip install torch==${{ matrix.pytorch-version }}
           uv pip list
 
+      - name: Auth with GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_CREDENTIALS }}
+
+      - name: Pull data from DVC
+        run: |
+          uv run dvc pull --no-run-cache
+
       - name: Run tests with coverage
         run: |
           # Tell coverage where your source code is
