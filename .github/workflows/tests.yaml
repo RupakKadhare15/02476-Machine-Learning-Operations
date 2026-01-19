@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - tests
   pull_request:
     branches:
       - main
@@ -16,7 +15,7 @@ jobs:
       matrix:
         operating-system: ["ubuntu-latest", "windows-latest", "macos-latest"]
         python-version: ["3.12", "3.11"]
-        pytorch-version: ["2.6.0", "latest"]
+        pytorch-version: ["2.6.0", "2.6.1"]
 
 
     steps:
