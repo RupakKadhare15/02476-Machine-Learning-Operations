@@ -49,6 +49,8 @@ dev = [
     "ruff==0.14.11",
     "mkdocstrings-python==1.12.2",
     "snakeviz>=2.2.2",
+    "pytest-mock>=3.10.0",
+    "requests>=2.28.0",
 ]
 
 
