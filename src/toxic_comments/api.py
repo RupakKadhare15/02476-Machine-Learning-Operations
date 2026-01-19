@@ -66,8 +66,6 @@ def predict(request: ToxicCommentRequest):
 
     try:
         # 1. Preprocessing (Tokenization)
-        # BERTweet specific normalization is handled by its tokenizer usually, 
-        # but ensure inputs match training conditions.
         inputs = tokenizer(
             request.text,
             return_tensors="pt",
@@ -82,7 +80,6 @@ def predict(request: ToxicCommentRequest):
             logits = outputs.logits
             
         # 3. Postprocessing
-        # Apply softmax to get probabilities
         probs = F.softmax(logits, dim=1)
         
         # Get the predicted class index (0 or 1)
