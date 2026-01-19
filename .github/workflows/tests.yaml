@@ -1,13 +1,14 @@
 name: Unit Tests
 
-on:
-  push:
-    branches:
-        - Rupak-Docker
-  pull_request:
-    branches:
-        - main
-        
+on: {}
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
 jobs:
   test:
     runs-on: ${{ matrix.operating-system }}
@@ -41,3 +42,4 @@ jobs:
         run: |
           uv run coverage run -m pytest tests/
           uv run coverage report -m
+          uv run coverage xml

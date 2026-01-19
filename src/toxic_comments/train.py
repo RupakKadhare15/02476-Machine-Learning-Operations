@@ -74,5 +74,5 @@ def main(cfg):
     )
     trainer.fit(model, datamodule)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
