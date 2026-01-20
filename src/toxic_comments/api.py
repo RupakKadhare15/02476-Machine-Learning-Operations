@@ -46,7 +46,9 @@ async def lifespan(app: FastAPI):
 
         print(f'Loading Model from {CHECKPOINT_PATH}...')
         # FORCE CPU LOAD to avoid MPS/device mismatch errors
-        model = ToxicCommentsTransformer.load_from_checkpoint(CHECKPOINT_PATH, map_location=torch.device('cpu'))
+        model = ToxicCommentsTransformer.load_from_checkpoint(
+            CHECKPOINT_PATH, map_location=torch.device('cpu')
+        )
         model.eval()
         model.freeze()
         print('Model and Tokenizer loaded successfully!')
@@ -99,7 +101,10 @@ def predict(request: ToxicCommentRequest):
         label_name = model.config.id2label[pred_idx]
 
         return ToxicCommentResponse(
-            text=request.text, label=label_name, confidence=confidence, is_toxic=(pred_idx == 1)
+            text=request.text,
+            label=label_name,
+            confidence=confidence,
+            is_toxic=(pred_idx == 1),
         )
 
     except Exception as e:
