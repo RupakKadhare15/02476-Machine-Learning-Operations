@@ -1,11 +1,11 @@
 import hydra
 import omegaconf
 import pytorch_lightning as pl
-import wandb
 from dotenv import load_dotenv
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
 
+import wandb
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
 
@@ -17,9 +17,7 @@ def main(cfg):
     wandb.login()
 
     # convert cfg to a dict
-    cfg_dict = omegaconf.OmegaConf.to_container(
-        cfg, resolve=True, throw_on_missing=True
-    )
+    cfg_dict = omegaconf.OmegaConf.to_container(cfg, resolve=True, throw_on_missing=True)
 
     # Start a new wandb run to track this script.
     wandb.init(
@@ -34,7 +32,7 @@ def main(cfg):
     # Initialize datamodule
     datamodule = ToxicCommentsDataModule(
         model_name_or_path=cfg.model_name_or_path,
-        data_dir='data',
+        data_dir=cfg.data_dir,
         train_batch_size=cfg.batch_size,
         eval_batch_size=cfg.batch_size,
         max_length=cfg.max_length,
@@ -63,6 +61,7 @@ def main(cfg):
         logger=WandbLogger(project=cfg.wandb.project),
     )
     trainer.fit(model, datamodule)
+
 
 if __name__ == '__main__':
     main()

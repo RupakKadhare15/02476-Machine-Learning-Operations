@@ -16,9 +16,12 @@ def preprocess_data(ctx: Context) -> None:
 
 
 @task
-def train(ctx: Context) -> None:
+def train(ctx: Context, data_dir: str | None=None) -> None:
     """Train model."""
-    ctx.run(f'uv run src/{PROJECT_NAME}/train.py', echo=True, pty=not WINDOWS)
+    if data_dir:
+        ctx.run(f'uv run src/{PROJECT_NAME}/train.py --data_dir={data_dir}', echo=True, pty=not WINDOWS)
+    else:
+        ctx.run(f'uv run src/{PROJECT_NAME}/train.py', echo=True, pty=not WINDOWS)
     ctx.run(f'uv run src/{PROJECT_NAME}/log_artifact.py', echo=True, pty=not WINDOWS)
 
 
