@@ -28,9 +28,10 @@ dependencies = [
     "matplotlib>=3.10.8",
     "pandas>=2.3.3",
     "python-dotenv>=1.2.1",
+    "pytorch-lightning>=2.6.0",
+    "requests>=2.32.5",
     "seaborn>=0.13.2",
-    "pandas>=2.3.3",
-    "python-dotenv>=1.2.1",
+    "streamlit>=1.53.0",
     "torch>=2.6.0",
     "transformers>=4.57.3",
     "typer==0.15.1",
@@ -49,6 +50,8 @@ dev = [
     "ruff==0.14.11",
     "mkdocstrings-python==1.12.2",
     "snakeviz>=2.2.2",
+    "pytest-mock>=3.10.0",
+    "requests>=2.28.0",
 ]
 
 
@@ -75,7 +78,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["I", "E4", "E7", "E9", "F", "W", "D"]
-ignore = ["D100", "D211", "D212", "D401"]
+ignore = ["D100", "D203", "D211", "D212", "D401"]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

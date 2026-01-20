@@ -28,6 +28,7 @@ class ToxicCommentsTransformer(pl.LightningModule):
             learning_rate: Learning rate for the optimizer
             adam_epsilon: Epsilon value for the AdamW optimizer
             **kwargs: Additional keyword arguments
+
         """
         super().__init__()
 
@@ -86,8 +87,8 @@ class ToxicCommentsTransformer(pl.LightningModule):
             avg_loss = losses.mean()
             accuracy = (preds == labels).float().mean()
 
-            self.log("val_loss", avg_loss, prog_bar=True)
-            self.log("val_accuracy", accuracy, prog_bar=True)
+            self.log('val_loss', avg_loss, prog_bar=True)
+            self.log('val_accuracy', accuracy, prog_bar=True)
         self.outputs.clear()
 
     def configure_optimizers(self):

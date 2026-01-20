@@ -1,10 +1,10 @@
 import hydra
 import omegaconf
-import wandb
 import pytorch_lightning as pl
+import wandb
+from dotenv import load_dotenv
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
-from dotenv import load_dotenv
 
 from toxic_comments.datamodule import ToxicCommentsDataModule
 from toxic_comments.model import ToxicCommentsTransformer
@@ -13,7 +13,6 @@ from toxic_comments.model import ToxicCommentsTransformer
 @hydra.main(version_base=None, config_path='../../configs', config_name='training.yaml')
 def main(cfg):
     """Train the model."""
-
     load_dotenv()  # Load environment variables from .env file
     wandb.login()
 
@@ -50,29 +49,20 @@ def main(cfg):
         adam_epsilon=cfg.adam_epsilon,
     )
 
+    early_stopping_callback = EarlyStopping(monitor='val_loss', patience=cfg.patience, verbose=True, mode='min')
 
-    early_stopping_callback = EarlyStopping(
-        monitor='val_loss',
-        patience=cfg.patience,
-        verbose=True,
-        mode='min'
-    )
-
-    now = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir.split("outputs/")[-1]
+    now = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir.split('outputs/')[-1]
     checkpoint_callback = ModelCheckpoint(
-        monitor='val_loss',
-        dirpath='models/' + now,
-        filename='best-checkpoint',
-        save_top_k=1,
-        mode='min'
+        monitor='val_loss', dirpath='models/' + now, filename='best-checkpoint', save_top_k=1, mode='min'
     )
 
     # Train with PyTorch Lightning Trainer
-    trainer = pl.Trainer(max_epochs=cfg.epochs,
-                        callbacks=[early_stopping_callback, checkpoint_callback],
-                        logger=WandbLogger(project=cfg.wandb.project),
+    trainer = pl.Trainer(
+        max_epochs=cfg.epochs,
+        callbacks=[early_stopping_callback, checkpoint_callback],
+        logger=WandbLogger(project=cfg.wandb.project),
     )
     trainer.fit(model, datamodule)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
