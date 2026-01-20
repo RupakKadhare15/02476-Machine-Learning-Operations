@@ -24,7 +24,7 @@ class TestDockerPush:
 
         # Mock load_dotenv and ensure ARTIFACTORY is not set
         with patch('tasks.load_dotenv'), patch.dict(os.environ, {}, clear=True):
-            with pytest.raises(ValueError, match='ARTIFACTORY environment variable is not set'):
+            with pytest.raises(ValueError, match='ARTIFACTORY environment variable is not set.'):
                 tasks.docker_push(mock_context)
 
     def test_docker_push_calls_docker_tag(self, mock_context):
