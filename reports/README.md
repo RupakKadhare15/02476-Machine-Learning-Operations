@@ -120,9 +120,9 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [X] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
     - @Levi
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
+* [X] Create a trigger workflow for automatically building your docker images (M21)
     - @Levi
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [X] Get your model training in GCP using either the Engine or Vertex AI (M21)
     - @Levi
 * [ ] Create a FastAPI application that can do inference using your model (M22)
     - @Rupak
