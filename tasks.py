@@ -16,9 +16,13 @@ def preprocess_data(ctx: Context) -> None:
 
 
 @task
-def train(ctx: Context) -> None:
+def train(ctx: Context, data_dir: str | None=None) -> None:
     """Train model."""
-    ctx.run(f'uv run src/{PROJECT_NAME}/train.py', echo=True, pty=not WINDOWS)
+    command = f'uv run src/{PROJECT_NAME}/train.py'
+    if data_dir:
+        # Pass data_dir using Hydra override syntax (no leading `--`, uses `=`).
+        command += f' data_dir={data_dir}'
+    ctx.run(command, echo=True, pty=not WINDOWS)
     ctx.run(f'uv run src/{PROJECT_NAME}/log_artifact.py', echo=True, pty=not WINDOWS)
 
 
