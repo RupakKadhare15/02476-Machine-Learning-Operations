@@ -16,7 +16,7 @@ def preprocess_data(ctx: Context) -> None:
 
 
 @task
-def train(ctx: Context, data_dir: str | None=None) -> None:
+def train(ctx: Context, data_dir: str | None = None) -> None:
     """Train model."""
     command = f'uv run src/{PROJECT_NAME}/train.py'
     if data_dir:
@@ -58,6 +58,9 @@ def docker_push(ctx: Context) -> None:
 
     ctx.run(f'docker tag train:latest {artifactory}/train:latest', echo=True, pty=not WINDOWS)
     ctx.run(f'docker push {artifactory}/train:latest', echo=True, pty=not WINDOWS)
+
+    ctx.run(f'docker tag api:latest {artifactory}/api:latest', echo=True, pty=not WINDOWS)
+    ctx.run(f'docker push {artifactory}/api:latest', echo=True, pty=not WINDOWS)
 
 
 # Documentation commands
