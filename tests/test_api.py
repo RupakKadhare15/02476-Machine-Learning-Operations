@@ -95,3 +95,34 @@ def test_predict_returns_503_when_not_ready(client, model_value, tokenizer_value
         response = client.post("/predict", json={"text": "hello"})
         assert response.status_code == 503
         assert response.json()["detail"] == "Model service not ready"
+
+# /predict successful prediction
+def test_predict_non_toxic_success(client):
+    logits = torch.tensor([[10.0, 0.0]])
+
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer()), patch(
+        "src.toxic_comments.api.model", DummyModel(logits)
+    ):
+        response = client.post("/predict", json={"text": "hello"})
+        body = response.json()
+
+        assert response.status_code == 200
+        assert body["label"] == "non-toxic"
+        assert body["is_toxic"] is False
+        assert isinstance(body["confidence"], float)
+        assert 0.0 <= body["confidence"] <= 1.0
+
+
+def test_predict_toxic_success(client):
+    logits = torch.tensor([[0.0, 10.0]])
+
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer()), patch(
+        "src.toxic_comments.api.model", DummyModel(logits)
+    ):
+        response = client.post("/predict", json={"text": "you are awful"})
+        body = response.json()
+
+        assert response.status_code == 200
+        assert body["label"] == "toxic"
+        assert body["is_toxic"] is True
+        assert body["confidence"] >= 0.5
