@@ -78,3 +78,20 @@ def test_health_reports_model_loaded(client):
     with patch("src.toxic_comments.api.model", object()):
         response = client.get("/health")
         assert response.json() == {"status": "running", "model_loaded": True}
+
+# /predict readiness (503)
+@pytest.mark.parametrize(
+    "model_value, tokenizer_value",
+    [
+        (None, None),
+        (None, object()),
+        (object(), None),
+    ],
+)
+def test_predict_returns_503_when_not_ready(client, model_value, tokenizer_value):
+    with patch("src.toxic_comments.api.model", model_value), patch(
+        "src.toxic_comments.api.tokenizer", tokenizer_value
+    ):
+        response = client.post("/predict", json={"text": "hello"})
+        assert response.status_code == 503
+        assert response.json()["detail"] == "Model service not ready"
