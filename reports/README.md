@@ -141,13 +141,21 @@ will check the repositories and the code to verify your answers.
 ### Week 3
 
 * [ ] Check how robust your model is towards data drifting (M27)
+    - @Levi
 * [ ] Deploy to the cloud a drift detection API (M27)
+    - @Levi
 * [ ] Instrument your API with a couple of system metrics (M28)
+    - @Flo
 * [ ] Setup cloud monitoring of your instrumented application (M28)
+    - @Flo
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
+    - @Flo
 * [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+    - @Levi
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
+    - @Rupak
 * [ ] Play around with quantization, compilation and pruning for you trained models to increase inference speed (M31)
+    - @Rupak
 
 ### Extra
 
