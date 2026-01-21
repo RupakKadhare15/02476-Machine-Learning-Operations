@@ -100,9 +100,7 @@ class TestDockerPush:
 
         artifactory = 'us-central1-docker.pkg.dev/my-project/my-repo'
 
-        with patch('tasks.load_dotenv') as mock_load_dotenv, patch.dict(
-            os.environ, {'ARTIFACTORY': artifactory}
-        ):
+        with patch('tasks.load_dotenv') as mock_load_dotenv, patch.dict(os.environ, {'ARTIFACTORY': artifactory}):
             tasks.docker_push(mock_context)
 
             # Verify load_dotenv was called with override=True

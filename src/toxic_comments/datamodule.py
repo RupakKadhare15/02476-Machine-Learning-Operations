@@ -11,7 +11,6 @@ from transformers import AutoTokenizer
 
 
 class ToxicCommentsDataset(Dataset):
-
     """Dataset for toxic comments classification."""
 
     def __init__(self, csv_file: str, tokenizer, max_length: int = 128):
@@ -68,7 +67,6 @@ class ToxicCommentsDataset(Dataset):
 
 
 class ToxicCommentsDataModule(pl.LightningDataModule):
-
     """PyTorch Lightning DataModule for Toxic Comments dataset."""
 
     def __init__(
@@ -161,6 +159,7 @@ def dataset_statistics(data_dir: str = 'data', output_dir: str = 'reports/figure
     Returns:
     -------
         dict: Dictionary containing dataset statistics
+
     """
     data_path = Path(data_dir)
     output_path = Path(output_dir)
@@ -206,24 +205,24 @@ def dataset_statistics(data_dir: str = 'data', output_dir: str = 'reports/figure
     print('=' * 60)
     print('TOXIC COMMENTS DATASET STATISTICS')
     print('=' * 60)
-    print(f'\nDataset Sizes:')
+    print('\nDataset Sizes:')
     print(f'  Training samples:     {stats["train_samples"]:,}')
     print(f'  Validation samples:   {stats["validation_samples"]:,}')
     print(f'  Test samples:         {stats["test_samples"]:,}')
     print(f'  Total samples:        {stats["total_samples"]:,}')
 
-    print(f'\nClass Distribution:')
-    print(f'  Training:')
+    print('\nClass Distribution:')
+    print('  Training:')
     print(f'    - Toxic:            {stats["train_toxic"]:,} ({stats["train_toxic_pct"]:.2f}%)')
-    print(f'    - Non-toxic:        {stats["train_non_toxic"]:,} ({100-stats["train_toxic_pct"]:.2f}%)')
-    print(f'  Validation:')
+    print(f'    - Non-toxic:        {stats["train_non_toxic"]:,} ({100 - stats["train_toxic_pct"]:.2f}%)')
+    print('  Validation:')
     print(f'    - Toxic:            {stats["val_toxic"]:,} ({stats["val_toxic_pct"]:.2f}%)')
-    print(f'    - Non-toxic:        {stats["val_non_toxic"]:,} ({100-stats["val_toxic_pct"]:.2f}%)')
-    print(f'  Test:')
+    print(f'    - Non-toxic:        {stats["val_non_toxic"]:,} ({100 - stats["val_toxic_pct"]:.2f}%)')
+    print('  Test:')
     print(f'    - Toxic:            {stats["test_toxic"]:,} ({stats["test_toxic_pct"]:.2f}%)')
-    print(f'    - Non-toxic:        {stats["test_non_toxic"]:,} ({100-stats["test_toxic_pct"]:.2f}%)')
+    print(f'    - Non-toxic:        {stats["test_non_toxic"]:,} ({100 - stats["test_toxic_pct"]:.2f}%)')
 
-    print(f'\nText Length Statistics:')
+    print('\nText Length Statistics:')
     print(f'  Training:   Avg={stats["train_avg_length"]:.1f}, Max={stats["train_max_length"]}')
     print(f'  Validation: Avg={stats["val_avg_length"]:.1f}, Max={stats["val_max_length"]}')
     print(f'  Test:       Avg={stats["test_avg_length"]:.1f}, Max={stats["test_max_length"]}')
@@ -259,15 +258,17 @@ def dataset_statistics(data_dir: str = 'data', output_dir: str = 'reports/figure
     fig, axes = plt.subplots(2, 2, figsize=(15, 12))
 
     # Histogram of text lengths for each split
-    for ax, split_name, df, color in zip(
-        axes.flat[:3], splits, dfs, ['#3498db', '#9b59b6', '#e67e22']
-    ):
+    for ax, split_name, df, color in zip(axes.flat[:3], splits, dfs, ['#3498db', '#9b59b6', '#e67e22']):
         ax.hist(df['text_length'], bins=50, alpha=0.7, color=color, edgecolor='black')
         ax.set_title(f'{split_name} - Text Length Distribution', fontsize=12, fontweight='bold')
         ax.set_xlabel('Text Length (characters)', fontsize=10)
         ax.set_ylabel('Frequency', fontsize=10)
         ax.axvline(
-            df['text_length'].mean(), color='red', linestyle='--', linewidth=2, label=f'Mean: {df["text_length"].mean():.1f}'
+            df['text_length'].mean(),
+            color='red',
+            linestyle='--',
+            linewidth=2,
+            label=f'Mean: {df["text_length"].mean():.1f}',
         )
         ax.legend()
 

@@ -13,7 +13,6 @@ from toxic_comments.model import ToxicCommentsTransformer
 
 
 class TestForwardPass:
-
     """Test suite for forward pass."""
 
     @pytest.fixture
@@ -126,7 +125,6 @@ class TestForwardPass:
 
 
 class TestModelInitialization:
-
     """Test suite for model initialization."""
 
     def test_basic_initialization(self):
@@ -250,11 +248,11 @@ class TestModelInitialization:
 
 
 class TestTrainingStep:
-
     """Test suite for training step."""
 
     @pytest.fixture
     def model_with_mock_forward(self):
+        """Create a model with mocked forward method."""
         with (
             patch('transformers.AutoConfig.from_pretrained') as mock_config,
             patch('transformers.AutoModelForSequenceClassification.from_pretrained'),
@@ -266,7 +264,6 @@ class TestTrainingStep:
             model.forward = Mock()
             model.log = Mock()
             return model
-
 
     def test_training_step_returns_loss(self, model_with_mock_forward):
         """Test training_step returns loss from forward pass."""

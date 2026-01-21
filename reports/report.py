@@ -13,7 +13,6 @@ from loguru import logger
 
 
 class Constraints(pydantic.BaseModel):
-
     """Base class for constraints."""
 
     def __call__(self, answer: str, index: int) -> None:
@@ -22,7 +21,6 @@ class Constraints(pydantic.BaseModel):
 
 
 class NoConstraints(Constraints):
-
     """No constraints on the answer."""
 
     def __call__(self, answer: str, index: int) -> bool:
@@ -31,7 +29,6 @@ class NoConstraints(Constraints):
 
 
 class LengthConstraints(Constraints):
-
     """Check constraints on the length of the answer."""
 
     min_length: int = pydantic.Field(ge=0)
@@ -50,7 +47,6 @@ class LengthConstraints(Constraints):
 
 
 class ImageConstraints(Constraints):
-
     """Check constraints on the number of images in the answer."""
 
     min_images: int = pydantic.Field(ge=0)
@@ -69,7 +65,6 @@ class ImageConstraints(Constraints):
 
 
 class MultiConstraints(Constraints):
-
     """Check multiple constraints on the answer."""
 
     constrains: list[Constraints]

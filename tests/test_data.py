@@ -22,7 +22,6 @@ def mock_path():
 
 
 class TestDataModule:
-
     """Tests for data.py module structure."""
 
     def test_import(self):
@@ -54,7 +53,6 @@ class TestDataModule:
 
 
 class TestDataFunctionality:
-
     """Tests for data.py functionality with mocks."""
 
     def test_directory_creation(self, mock_path):
@@ -115,7 +113,6 @@ DATA_DIR = Path(__file__).parent.parent / 'data'
     reason='Run data.py to download data first',
 )
 class TestDataFiles:
-
     """Tests for downloaded data files."""
 
     @pytest.fixture(params=['test.csv', 'train.csv', 'validation.csv'])

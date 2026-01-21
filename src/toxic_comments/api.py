@@ -46,9 +46,7 @@ async def lifespan(app: FastAPI):
 
         print(f'Loading Model from {CHECKPOINT_PATH}...')
         # FORCE CPU LOAD to avoid MPS/device mismatch errors
-        model = ToxicCommentsTransformer.load_from_checkpoint(
-            CHECKPOINT_PATH, map_location=torch.device('cpu')
-        )
+        model = ToxicCommentsTransformer.load_from_checkpoint(CHECKPOINT_PATH, map_location=torch.device('cpu'))
         model.eval()
         model.freeze()
         print('Model and Tokenizer loaded successfully!')
@@ -89,7 +87,7 @@ def predict(request: ToxicCommentRequest):
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
-        
+
         # Check if logits have the expected shape
         if logits.shape[1] != 2:
             raise ValueError(f'Unexpected logits shape: {logits.shape}')
