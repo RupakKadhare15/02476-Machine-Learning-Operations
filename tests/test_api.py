@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from typing import Any, Dict, Optional
 
 import pytest
+from unittest.mock import patch
 import torch
 from fastapi.testclient import TestClient
 import src.toxic_comments.api as api
