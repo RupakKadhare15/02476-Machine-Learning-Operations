@@ -4,9 +4,10 @@ import os
 from pathlib import Path
 
 import hydra
-import wandb
 from dotenv import load_dotenv
 from loguru import logger
+
+import wandb
 
 
 def find_latest_model(model_dir: str = 'models', extensions: list[str] = None) -> Path | None:
@@ -50,8 +51,8 @@ def find_latest_model(model_dir: str = 'models', extensions: list[str] = None) -
 
 def upload_model_to_registry(
     model_path: Path,
-    artifact_name: str = "bert-toxic-comments-classifier",
-    artifact_type: str = "model",
+    artifact_name: str = 'bert-toxic-comments-classifier',
+    artifact_type: str = 'model',
     description: str = None,
     aliases: list[str] = None,
     metadata: dict = None,

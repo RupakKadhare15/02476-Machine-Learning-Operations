@@ -108,6 +108,10 @@ def predict(request: ToxicCommentRequest, pred_db_path: str = '/gcp/predictions_
             outputs = model(**inputs)
             logits = outputs.logits
 
+        # Check if logits have the expected shape
+        if logits.shape[1] != 2:
+            raise ValueError(f'Unexpected logits shape: {logits.shape}')
+
         # 3. Postprocessing
         probs = F.softmax(logits, dim=1)
 

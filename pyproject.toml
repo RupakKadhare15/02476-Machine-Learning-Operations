@@ -54,6 +54,7 @@ dev = [
     "snakeviz>=2.2.2",
     "pytest-mock>=3.10.0",
     "requests>=2.28.0",
+    "httpx>=0.28.1",
 ]
 
 
