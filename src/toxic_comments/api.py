@@ -86,8 +86,13 @@ async def lifespan(app: FastAPI):
             # Download from GCS
             client = storage.Client()
             bucket = client.bucket("models_bertoxic")
-            blob = bucket.blob("model.onnx")  # The name of the file inside the bucket
+            blob = bucket.blob("model.onnx")  
             blob.download_to_filename(ONNX_MODEL_PATH)
+
+            blob_data = bucket.blob("model.onnx.data")
+            data_path = ONNX_MODEL_PATH + ".data"
+            blob_data.download_to_filename(data_path)
+            
             print("Download complete.")
         print('Loading Tokenizer...')
         tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME)
@@ -153,10 +158,6 @@ def predict(request: ToxicCommentRequest):
 
         if logits.shape[1] != 2:
             raise ValueError(f'Unexpected logits shape: {logits.shape}. Expected 2 labels.')
-
-        # Check if logits have the expected shape
-        if logits.shape[1] != 2:
-            raise ValueError(f'Unexpected logits shape: {logits.shape}')
 
         # 3. Postprocessing
         probs = softmax(logits, axis=1)
