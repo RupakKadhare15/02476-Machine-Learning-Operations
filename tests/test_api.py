@@ -126,3 +126,42 @@ def test_predict_toxic_success(client):
         assert body["label"] == "toxic"
         assert body["is_toxic"] is True
         assert body["confidence"] >= 0.5
+
+
+# /predict error handling
+def test_predict_500_if_tokenizer_raises(client):
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer(should_raise=True)), patch(
+        "src.toxic_comments.api.model", DummyModel(torch.tensor([[0.0, 1.0]]))
+    ):
+        response = client.post("/predict", json={"text": "hi"})
+        assert response.status_code == 500
+        assert "boom" in response.json()["detail"]
+
+
+def test_predict_500_if_model_raises(client):
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer()), patch(
+        "src.toxic_comments.api.model",
+        DummyModel(torch.tensor([[0.0, 1.0]]), should_raise=True),
+    ):
+        response = client.post("/predict", json={"text": "hi"})
+        assert response.status_code == 500
+        assert "boom" in response.json()["detail"]
+
+
+def test_predict_500_invalid_logits_shape(client):
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer()), patch(
+        "src.toxic_comments.api.model", DummyModel(torch.tensor([[1.0]]))
+    ):
+        response = client.post("/predict", json={"text": "hi"})
+        assert response.status_code == 500
+
+
+def test_predict_500_missing_id2label(client):
+    logits = torch.tensor([[0.0, 10.0]])
+
+    with patch("src.toxic_comments.api.tokenizer", DummyTokenizer()), patch(
+        "src.toxic_comments.api.model",
+        DummyModel(logits, id2label={0: "non-toxic"}),
+    ):
+        response = client.post("/predict", json={"text": "hi"})
+        assert response.status_code == 500
