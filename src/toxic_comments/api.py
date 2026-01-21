@@ -48,6 +48,16 @@ PROCESS_CPU_PERCENT = Gauge(
     "Process CPU utilization percentage",
 )
 
+# Process handle for system metrics
+_proc = psutil.Process(os.getpid())
+
+
+def update_system_metrics() -> None:
+    """Update a couple of simple process/system metrics."""
+    # RSS memory in bytes
+    PROCESS_RESIDENT_MEMORY_BYTES.set(_proc.memory_info().rss)
+    # CPU percent since last call (psutil needs to be "primed" once)
+    PROCESS_CPU_PERCENT.set(_proc.cpu_percent(interval=None))
 
 # --- Schemas ---
 class ToxicCommentRequest(BaseModel):
