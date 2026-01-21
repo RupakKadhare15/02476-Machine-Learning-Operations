@@ -54,7 +54,7 @@ class TestDockerPush:
             mock_context.run.assert_any_call(expected_push_command, echo=True, pty=not tasks.WINDOWS)
 
     def test_docker_push_calls_commands_in_order(self, mock_context):
-        """Test docker_push calls tag before push."""
+        """Test docker_push calls tag before push for both train and api images."""
         import tasks
 
         artifactory = 'us-central1-docker.pkg.dev/my-project/my-repo'
@@ -62,17 +62,23 @@ class TestDockerPush:
         with patch('tasks.load_dotenv'), patch.dict(os.environ, {'ARTIFACTORY': artifactory}):
             tasks.docker_push(mock_context)
 
-            # Verify the order of calls
-            assert mock_context.run.call_count == 2
+            # Verify the order of calls (4 total: 2 tags + 2 pushes)
+            assert mock_context.run.call_count == 4
             calls = mock_context.run.call_args_list
 
-            # First call should be docker tag
+            # First call should be docker tag for train
             assert 'docker tag train:latest' in calls[0][0][0]
-            # Second call should be docker push
+            # Second call should be docker push for train
             assert 'docker push' in calls[1][0][0]
+            assert 'train:latest' in calls[1][0][0]
+            # Third call should be docker tag for api
+            assert 'docker tag api:latest' in calls[2][0][0]
+            # Fourth call should be docker push for api
+            assert 'docker push' in calls[3][0][0]
+            assert 'api:latest' in calls[3][0][0]
 
     def test_docker_push_with_different_artifactory_values(self, mock_context):
-        """Test docker_push works with different ARTIFACTORY values."""
+        """Test docker_push works with different ARTIFACTORY values for both images."""
         import tasks
 
         test_artifactories = [
@@ -87,12 +93,19 @@ class TestDockerPush:
             with patch('tasks.load_dotenv'), patch.dict(os.environ, {'ARTIFACTORY': artifactory}):
                 tasks.docker_push(mock_context)
 
-                # Verify correct artifactory is used in commands
-                expected_tag_command = f'docker tag train:latest {artifactory}/train:latest'
-                expected_push_command = f'docker push {artifactory}/train:latest'
+                # Verify correct artifactory is used in commands for train image
+                expected_train_tag = f'docker tag train:latest {artifactory}/train:latest'
+                expected_train_push = f'docker push {artifactory}/train:latest'
 
-                mock_context.run.assert_any_call(expected_tag_command, echo=True, pty=not tasks.WINDOWS)
-                mock_context.run.assert_any_call(expected_push_command, echo=True, pty=not tasks.WINDOWS)
+                mock_context.run.assert_any_call(expected_train_tag, echo=True, pty=not tasks.WINDOWS)
+                mock_context.run.assert_any_call(expected_train_push, echo=True, pty=not tasks.WINDOWS)
+
+                # Verify correct artifactory is used in commands for api image
+                expected_api_tag = f'docker tag api:latest {artifactory}/api:latest'
+                expected_api_push = f'docker push {artifactory}/api:latest'
+
+                mock_context.run.assert_any_call(expected_api_tag, echo=True, pty=not tasks.WINDOWS)
+                mock_context.run.assert_any_call(expected_api_push, echo=True, pty=not tasks.WINDOWS)
 
     def test_docker_push_loads_dotenv(self, mock_context):
         """Test docker_push calls load_dotenv with override=True."""
@@ -100,9 +113,7 @@ class TestDockerPush:
 
         artifactory = 'us-central1-docker.pkg.dev/my-project/my-repo'
 
-        with patch('tasks.load_dotenv') as mock_load_dotenv, patch.dict(
-            os.environ, {'ARTIFACTORY': artifactory}
-        ):
+        with patch('tasks.load_dotenv') as mock_load_dotenv, patch.dict(os.environ, {'ARTIFACTORY': artifactory}):
             tasks.docker_push(mock_context)
 
             # Verify load_dotenv was called with override=True
