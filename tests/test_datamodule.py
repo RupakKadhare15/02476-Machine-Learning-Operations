@@ -31,7 +31,6 @@ def temp_data_dir():
 
 
 class TestToxicCommentsDataset:
-
     """Test suite for ToxicCommentsDataset class."""
 
     @pytest.fixture
@@ -141,7 +140,6 @@ class TestToxicCommentsDataset:
 
 
 class TestToxicCommentsDataModule:
-
     """Test suite for ToxicCommentsDataModule class."""
 
     @pytest.fixture
@@ -270,7 +268,6 @@ class TestToxicCommentsDataModule:
 
 
 class TestIntegration:
-
     """Integration tests for the full data pipeline."""
 
     @pytest.fixture

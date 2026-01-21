@@ -7,7 +7,6 @@ from transformers import AutoConfig, AutoModelForSequenceClassification, AutoTok
 
 
 class ToxicCommentsTransformer(pl.LightningModule):
-
     """PyTorch Lightning Module for toxic comments classification using a transformer model."""
 
     def __init__(
@@ -52,7 +51,7 @@ class ToxicCommentsTransformer(pl.LightningModule):
         """Perform a training step."""
         outputs = self(**batch)
         loss = outputs[0]
-        self.log("train_loss", loss, prog_bar=True)
+        self.log('train_loss', loss, prog_bar=True)
         return loss
 
     def validation_step(self, batch, batch_idx, dataloader_idx=0):
@@ -73,9 +72,9 @@ class ToxicCommentsTransformer(pl.LightningModule):
 
         labels = batch['labels']
 
-        self.log("test_loss", test_loss, prog_bar=True)
+        self.log('test_loss', test_loss, prog_bar=True)
         accuracy = (preds == labels).float().mean()
-        self.log("test_accuracy", accuracy, prog_bar=True)
+        self.log('test_accuracy', accuracy, prog_bar=True)
 
     def on_validation_epoch_end(self):
         """Compute and log validation metrics at the end of the epoch."""
