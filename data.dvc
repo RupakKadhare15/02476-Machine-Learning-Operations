@@ -19,6 +19,10 @@ outs:
   - relpath: ruddit_comments_score.csv
     md5: c5d86236c01326424c0557bb597f31e9
     size: 1247531
+    cloud:
+      remote_storage:
+        etag: 08c9b3b7b5a89c92031001
+        version_id: '1768987619613129'
   - relpath: test.csv
     md5: 6f359c32f9dc0045c786cd5676859177
     size: 6649710
