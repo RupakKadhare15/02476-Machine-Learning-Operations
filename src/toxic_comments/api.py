@@ -89,6 +89,10 @@ def predict(request: ToxicCommentRequest):
         with torch.no_grad():
             outputs = model(**inputs)
             logits = outputs.logits
+        
+        # Check if logits have the expected shape
+        if logits.shape[1] != 2:
+            raise ValueError(f'Unexpected logits shape: {logits.shape}')
 
         # 3. Postprocessing
         probs = F.softmax(logits, dim=1)
