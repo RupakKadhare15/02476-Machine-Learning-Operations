@@ -3,21 +3,178 @@ Data drift monitoring script for toxic comments classifier.
 
 This script:
 1. Downloads the Ruddit dataset from Kaggle
-2. Runs predictions on a sample of comments via the API
-3. Generates drift monitoring reports
-4. Calculates performance metrics (accuracy, F1, AUC)
+2. Downloads and processes GLOVE embeddings for text data
+3. Runs predictions on a sample of comments via the API
+4. Generates drift monitoring reports using embedding drift detection
+5. Calculates performance metrics (accuracy, F1, AUC)
 """
 
+import urllib.request
+import zipfile
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import requests
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+from tqdm import tqdm
 
 # API endpoint configuration
 API_BASE_URL = 'http://localhost:8000'
 DATA_DIR = 'data'
 PRED_DB_PATH = '/tmp/drift_predictions_db'
+GLOVE_URL = 'http://nlp.stanford.edu/data/glove.6B.zip'
+GLOVE_DIM = 50
+
+
+def download_glove_vectors(data_dir: str = DATA_DIR):
+    """
+    Download and extract GLOVE vectors if not already present.
+
+    Args:
+        data_dir: Directory to save GLOVE vectors
+
+    """
+    glove_file = Path(data_dir) / f'glove.6B.{GLOVE_DIM}d.txt'
+
+    if glove_file.exists():
+        print(f'GLOVE vectors already exist at {glove_file}')
+        return glove_file
+
+    print('Downloading GLOVE vectors...')
+    zip_path = Path(data_dir) / 'glove.6B.zip'
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Download the zip file with progress bar
+    class TqdmUpTo(tqdm):
+        def update_to(self, b=1, bsize=1, tsize=None):
+            if tsize is not None:
+                self.total = tsize
+            self.update(b * bsize - self.n)
+
+    with TqdmUpTo(unit='B', unit_scale=True, unit_divisor=1024, miniters=1, desc='Downloading') as t:
+        urllib.request.urlretrieve(GLOVE_URL, zip_path, reporthook=t.update_to)
+
+    print('Download complete. Extracting...')
+
+    # Extract only the file we need
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        for member in tqdm(zip_ref.namelist(), desc='Extracting'):
+            if member == f'glove.6B.{GLOVE_DIM}d.txt':
+                zip_ref.extract(member, data_dir)
+                break
+
+    # Remove the zip file to save space
+    zip_path.unlink()
+    print(f'GLOVE vectors saved to {glove_file}')
+
+    return glove_file
+
+
+def load_glove_model(glove_file: Path):
+    """
+    Load GLOVE vectors from a text file.
+
+    Args:
+        glove_file: Path to the GLOVE vectors file
+
+    Returns:
+        Dictionary mapping words to their vector representations
+
+    """
+    print(f'Loading GLOVE model from {glove_file}...')
+    glove_model = {}
+
+    # Count lines for progress bar
+    with open(glove_file, 'r', encoding='utf-8') as f:
+        num_lines = sum(1 for _ in f)
+
+    with open(glove_file, 'r', encoding='utf-8') as f:
+        for line in tqdm(f, total=num_lines, desc='Loading GLOVE vectors'):
+            split_line = line.split()
+            word = split_line[0]
+            embedding = np.array(split_line[1:], dtype=np.float64)
+            glove_model[word] = embedding
+
+    print(f'Loaded {len(glove_model)} word vectors')
+    return glove_model
+
+
+def get_sentence_embeddings(texts, glove_model, dim=GLOVE_DIM):
+    """
+    Convert texts to sentence embeddings by averaging word vectors.
+
+    Args:
+        texts: Series or list of text strings
+        glove_model: Dictionary of word to vector mappings
+        dim: Dimensionality of the embeddings
+
+    Returns:
+        numpy array of sentence embeddings
+
+    """
+    embeddings = []
+
+    for text in tqdm(texts, desc='Computing embeddings'):
+        # Tokenize by splitting on spaces (simple tokenization)
+        words = str(text).lower().split()
+
+        # Average word vectors
+        word_vecs = []
+        for word in words:
+            if word in glove_model:
+                word_vecs.append(glove_model[word])
+
+        # If no words found, use zero vector
+        if len(word_vecs) == 0:
+            sentence_vec = np.zeros(dim)
+        else:
+            sentence_vec = np.mean(word_vecs, axis=0)
+
+        embeddings.append(sentence_vec)
+
+    return np.array(embeddings)
+
+
+def compute_and_save_train_embeddings(data_dir: str = DATA_DIR):
+    """
+    Compute GLOVE embeddings for training data and save them.
+
+    Args:
+        data_dir: Directory containing training data and to save embeddings
+
+    """
+    train_path = Path(data_dir) / 'train.csv'
+    embeddings_path = Path(data_dir) / 'train_embeddings.csv'
+
+    if embeddings_path.exists():
+        print(f'Training embeddings already exist at {embeddings_path}')
+        return embeddings_path
+
+    if not train_path.exists():
+        print(f'Training data not found at {train_path}')
+        return None
+
+    print('Computing embeddings for training data...')
+
+    # Download GLOVE vectors if needed
+    glove_file = download_glove_vectors(data_dir)
+    glove_model = load_glove_model(glove_file)
+
+    # Load training data
+    train_df = pd.read_csv(train_path)
+    print(f'Loaded {len(train_df)} training samples')
+
+    # Compute embeddings
+    embeddings = get_sentence_embeddings(train_df['comment_text'], glove_model)
+
+    # Save as DataFrame
+    embeddings_df = pd.DataFrame(embeddings)
+    embeddings_df.columns = [f'emb_{i}' for i in range(embeddings_df.shape[1])]
+    embeddings_df.to_csv(embeddings_path, index=False)
+
+    print(f'Training embeddings saved to {embeddings_path}')
+    return embeddings_path
 
 
 def download_ruddit_dataset():
@@ -173,10 +330,16 @@ if __name__ == '__main__':
     parser.add_argument('--api-url', type=str, default=API_BASE_URL, help=f'API base URL (default: {API_BASE_URL})')
     parser.add_argument('--data-dir', type=str, default=DATA_DIR, help=f'Data directory (default: {DATA_DIR})')
     parser.add_argument('--download-only', action='store_true', help='Only download the dataset and exit')
+    parser.add_argument(
+        '--compute-embeddings', action='store_true', help='Compute and save GLOVE embeddings for training data'
+    )
 
     args = parser.parse_args()
 
-    if args.download_only:
+    if args.compute_embeddings:
+        print('Computing GLOVE embeddings for training data...')
+        compute_and_save_train_embeddings(args.data_dir)
+    elif args.download_only:
         download_ruddit_dataset()
     else:
         print('Starting drift monitoring pipeline...')
