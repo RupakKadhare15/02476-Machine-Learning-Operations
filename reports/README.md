@@ -140,9 +140,14 @@ will check the repositories and the code to verify your answers.
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
+* [X] Check how robust your model is towards data drifting (M27)
+    We test model robustness using the Reddit toxic comments dataset (https://www.kaggle.com/datasets/estebanmarcelloni/ruddit-papers-comments-scored). This dataset was sourced from a different platform but inherently contains comments that are either toxic or not, therefore it makes a good candidate for testing data drift.
+    1. We load the Reddit dataset and pass the comments through our inference API to obtain predictions.
+    2. We then call the /monitoring endpoint of our API, which generates a data drift report comparing the Reddit dataset (current data) with our original training dataset (reference data).
+    3. We also calculate the performance of our model quantified by accuracy, F1, ROCAUC scores on the Reddit dataset.
     - @Levi
-* [ ] Deploy to the cloud a drift detection API (M27)
+* [X] Deploy to the cloud a drift detection API (M27)
+    - The drift detection API is deployed in the same service as the prediction API, and it can be reached at `/monitoring` endpoint.
     - @Levi
 * [ ] Instrument your API with a couple of system metrics (M28)
     - @Flo
@@ -150,7 +155,8 @@ will check the repositories and the code to verify your answers.
     - @Flo
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
     - @Flo
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [X] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+    In the configs/training.yaml file, num_workers can be configured to use multiple workers for data loading.
     - @Levi
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
     - @Rupak
