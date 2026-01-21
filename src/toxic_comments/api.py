@@ -23,6 +23,31 @@ BASE_MODEL_NAME = 'vinai/bertweet-base'
 model = None
 tokenizer = None
 
+# --- Prometheus Metrics ---
+HTTP_REQUESTS_TOTAL = Counter(
+    "http_requests_total",
+    "Total HTTP requests",
+    ["endpoint", "method", "status"],
+)
+
+HTTP_REQUEST_DURATION_SECONDS = Histogram(
+    "http_request_duration_seconds",
+    "HTTP request duration in seconds",
+    ["endpoint", "method"],
+    # simple buckets that work fine for inference APIs
+    buckets=(0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10),
+)
+
+PROCESS_RESIDENT_MEMORY_BYTES = Gauge(
+    "process_resident_memory_bytes",
+    "Resident set size (RSS) memory in bytes",
+)
+
+PROCESS_CPU_PERCENT = Gauge(
+    "process_cpu_percent",
+    "Process CPU utilization percentage",
+)
+
 
 # --- Schemas ---
 class ToxicCommentRequest(BaseModel):
