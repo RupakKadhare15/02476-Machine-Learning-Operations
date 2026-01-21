@@ -20,9 +20,7 @@ def client():
     api.app.router.lifespan_context = noop_lifespan
     return TestClient(api.app, raise_server_exceptions=False)
 
-# -------------------------
-# Dummy tokenizer & model
-# -------------------------
+# Dummy classes to mock tokenizer and model behavior
 class DummyTokenizer:
     def __init__(self, should_raise: bool = False):
         self.should_raise = should_raise
@@ -58,3 +56,24 @@ class DummyModel:
         if self.should_raise:
             raise RuntimeError("boom")
         return SimpleNamespace(logits=self.logits)
+    
+
+# first test: health endpoint
+def test_health_returns_200_and_shape(client):
+    response = client.get("/health")
+    assert response.status_code == 200
+    body = response.json()
+    assert "status" in body
+    assert "model_loaded" in body
+
+
+def test_health_reports_model_not_loaded(client):
+    with patch("src.toxic_comments.api.model", None):
+        response = client.get("/health")
+        assert response.json() == {"status": "running", "model_loaded": False}
+
+
+def test_health_reports_model_loaded(client):
+    with patch("src.toxic_comments.api.model", object()):
+        response = client.get("/health")
+        assert response.json() == {"status": "running", "model_loaded": True}
