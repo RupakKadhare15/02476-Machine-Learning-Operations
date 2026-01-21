@@ -12,6 +12,10 @@ outs:
   - relpath: glove.6B.50d.txt
     md5: 0fac3659c38a4c0e9432fe603de60b12
     size: 171350079
+    cloud:
+      remote_storage:
+        etag: 08acc6d8b9819d92031001
+        version_id: '1769011519300396'
   - relpath: ruddit_comments_score.csv
     md5: c5d86236c01326424c0557bb597f31e9
     size: 1247531
@@ -36,6 +40,10 @@ outs:
   - relpath: train_embeddings.csv
     md5: 086860e5f5bb0182610c2c5f9b946363
     size: 114122568
+    cloud:
+      remote_storage:
+        etag: 0890e6b2b3819d92031001
+        version_id: '1769011506098960'
   - relpath: validation.csv
     md5: 657c63c27fa9ef4c88d0cb3acff71f79
     size: 6608296
