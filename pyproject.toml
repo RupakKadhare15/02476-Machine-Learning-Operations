@@ -42,6 +42,7 @@ dependencies = [
     "onnxscript>=0.5.7",
     "scipy>=1.17.0",
     "google-cloud-storage>=3.8.0",
+    "locust>=2.43.1",
 ]
 
 [dependency-groups]
