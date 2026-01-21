@@ -89,6 +89,11 @@ async def lifespan(app: FastAPI):
         model = ToxicCommentsTransformer.load_from_checkpoint(CHECKPOINT_PATH, map_location=torch.device('cpu'))
         model.eval()
         model.freeze()
+
+        # Prime psutil CPU measurement (first call often returns 0.0)
+        _proc.cpu_percent(interval=None)
+        update_system_metrics()
+
         print('Model and Tokenizer loaded successfully!')
         yield
     except Exception as e:
@@ -106,14 +111,28 @@ def health_check():
     """Health check endpoint that reports service status and model readiness."""
     return {'status': 'running', 'model_loaded': model is not None}
 
+@app.get("/metrics")
+def metrics():
+    # Expose Prometheus metrics
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 @app.post('/predict', response_model=ToxicCommentResponse)
 def predict(request: ToxicCommentRequest):
     """Classifies input text as toxic or non-toxic and returns the prediction with confidence."""
+    endpoint = "/predict"
+    method = "POST"
+    
     if not model or not tokenizer:
+        # record as 503 too
+        HTTP_REQUESTS_TOTAL.labels(endpoint=endpoint, method=method, status="503").inc()
         raise HTTPException(status_code=503, detail='Model service not ready')
 
+    start = time.perf_counter()
+    status = "200"
+
     try:
+        update_system_metrics()
+
         # 1. Preprocessing (Tokenization)
         inputs = tokenizer(
             request.text,
@@ -149,5 +168,14 @@ def predict(request: ToxicCommentRequest):
             is_toxic=(pred_idx == 1),
         )
 
+    except HTTPException:
+        # if you ever raise HTTPException inside, preserve its status in metrics
+        status = "500"
+        raise
     except Exception as e:
+        status = "500"
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        duration = time.perf_counter() - start
+        HTTP_REQUEST_DURATION_SECONDS.labels(endpoint=endpoint, method=method).observe(duration)
+        HTTP_REQUESTS_TOTAL.labels(endpoint=endpoint, method=method, status=status).inc()
