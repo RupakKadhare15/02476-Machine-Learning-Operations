@@ -1,9 +1,14 @@
 from contextlib import asynccontextmanager
+import os
+import time
 
+import psutil
 import torch
 import torch.nn.functional as F
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import Response
 from pydantic import BaseModel
+from prometheus_client import Counter, Gauge, Histogram, generate_latest, CONTENT_TYPE_LATEST
 from transformers import AutoTokenizer
 
 # Import your model class using the relative path inside your src structure
