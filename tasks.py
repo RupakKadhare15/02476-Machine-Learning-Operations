@@ -1,5 +1,6 @@
 import os
 
+from dotenv import load_dotenv
 from invoke import Context, task
 
 WINDOWS = os.name == 'nt'
@@ -15,9 +16,13 @@ def preprocess_data(ctx: Context) -> None:
 
 
 @task
-def train(ctx: Context) -> None:
+def train(ctx: Context, data_dir: str | None = None) -> None:
     """Train model."""
-    ctx.run(f'uv run src/{PROJECT_NAME}/train.py', echo=True, pty=not WINDOWS)
+    command = f'uv run src/{PROJECT_NAME}/train.py'
+    if data_dir:
+        # Pass data_dir using Hydra override syntax (no leading `--`, uses `=`).
+        command += f' data_dir={data_dir}'
+    ctx.run(command, echo=True, pty=not WINDOWS)
     ctx.run(f'uv run src/{PROJECT_NAME}/log_artifact.py', echo=True, pty=not WINDOWS)
 
 
@@ -32,13 +37,27 @@ def test(ctx: Context) -> None:
 def docker_build(ctx: Context, progress: str = 'plain') -> None:
     """Build docker images."""
     ctx.run(
-        f'docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress}',
+        f'docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress} --platform linux/amd64',
         echo=True,
         pty=not WINDOWS,
     )
     ctx.run(
-        f'docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress}', echo=True, pty=not WINDOWS
+        f'docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress} --platform linux/amd64',
+        echo=True,
+        pty=not WINDOWS,
     )
+
+
+@task
+def docker_push(ctx: Context) -> None:
+    """Push docker images to artifact registry."""
+    load_dotenv(override=True)
+    artifactory = os.getenv('ARTIFACTORY')
+    if not artifactory:
+        raise ValueError('ARTIFACTORY environment variable is not set.')
+
+    ctx.run(f'docker tag train:latest {artifactory}/train:latest', echo=True, pty=not WINDOWS)
+    ctx.run(f'docker push {artifactory}/train:latest', echo=True, pty=not WINDOWS)
 
 
 # Documentation commands

@@ -98,6 +98,10 @@ def predict(request: ToxicCommentRequest):
         if logits.shape[1] != 2:
             raise ValueError(f'Unexpected logits shape: {logits.shape}. Expected 2 labels.')
 
+        # Check if logits have the expected shape
+        if logits.shape[1] != 2:
+            raise ValueError(f'Unexpected logits shape: {logits.shape}')
+
         # 3. Postprocessing
         probs = softmax(logits, axis=1)
 

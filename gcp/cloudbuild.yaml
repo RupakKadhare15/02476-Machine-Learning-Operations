@@ -1,0 +1,36 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build train container image'
+  args: [
+    'build',
+    '.',
+    '-t',
+    'europe-north2-docker.pkg.dev/mlops-group-100-484410/models/train:latest',
+    '-f',
+    'dockerfiles/train.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push train container image'
+  args: [
+    'push',
+    'europe-north2-docker.pkg.dev/mlops-group-100-484410/models/train:latest'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build api container image'
+  args: [
+    'build',
+    '.',
+    '-t',
+    'europe-north2-docker.pkg.dev/mlops-group-100-484410/models/api:latest',
+    '-f',
+    'dockerfiles/api.dockerfile'
+  ]
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push api container image'
+  args: [
+    'push',
+    'europe-north2-docker.pkg.dev/mlops-group-100-484410/models/api:latest'
+  ]
+options:
+  logging: CLOUD_LOGGING_ONLY
+  

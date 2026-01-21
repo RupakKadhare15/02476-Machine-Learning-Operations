@@ -8,6 +8,7 @@ RUN uv sync --frozen --no-install-project
 COPY lightning_logs lightning_logs/ 
 
 COPY src src/
+COPY README.md README.md
 
 RUN uv sync --frozen
 
