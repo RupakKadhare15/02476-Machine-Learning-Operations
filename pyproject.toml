@@ -51,7 +51,7 @@ train = [
     "matplotlib>=3.10.8",
     "seaborn>=0.13.2",
 ]
-dev = [
+definitely_not_dev = [
     "dvc>=3.66.1",
     "dvc-gs>=3.0.2",
     "coverage==7.6.9",
