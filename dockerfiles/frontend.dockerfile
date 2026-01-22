@@ -10,8 +10,8 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen --no-install-project --no-cache --python 3.12 --group frontend
 
-COPY src/toxic_comments/frontend.py .
+COPY src ./src
 
 EXPOSE 8501
 
-ENTRYPOINT ["uv", "run", "streamlit", "run", "frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["uv", "run", "streamlit", "run", "src/toxic_comments/frontend.py", "--server.port=8501", "--server.address=0.0.0.0"]
