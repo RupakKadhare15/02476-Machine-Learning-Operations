@@ -6,7 +6,7 @@ from typing import Dict, Optional
 from unittest.mock import patch
 
 import pytest
-import torch
+import numpy as np
 from fastapi.testclient import TestClient
 
 import src.toxic_comments.api as api
@@ -39,8 +39,8 @@ class DummyTokenizer:
             raise RuntimeError('boom')
 
         return {
-            'input_ids': torch.tensor([[1, 2, 3]]),
-            'attention_mask': torch.tensor([[1, 1, 1]]),
+            'input_ids': np.array([[1, 2, 3]]),
+            'attention_mask': np.array([[1, 1, 1]]),
         }
 
 
@@ -49,7 +49,7 @@ class DummyModel:
 
     def __init__(
         self,
-        logits: torch.Tensor,
+        logits: np.ndarray,
         id2label: Optional[Dict[int, str]] = None,
         should_raise: bool = False,
     ):
@@ -117,7 +117,7 @@ def test_predict_returns_503_when_not_ready(client, model_value, tokenizer_value
 # /predict successful prediction
 def test_predict_non_toxic_success(client):
     """Test /predict returns correct response for non-toxic input."""
-    logits = torch.tensor([[10.0, 0.0]])
+    logits = np.array([[10.0, 0.0]])
 
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
@@ -136,7 +136,7 @@ def test_predict_non_toxic_success(client):
 
 def test_predict_toxic_success(client):
     """Test /predict returns correct response for toxic input."""
-    logits = torch.tensor([[0.0, 10.0]])
+    logits = np.array([[0.0, 10.0]])
 
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
@@ -159,7 +159,7 @@ def test_predict_500_if_tokenizer_raises(client):
     """Test /predict returns 500 if tokenizer raises an error."""
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer(should_raise=True)),
-        patch('src.toxic_comments.api.model', DummyModel(torch.tensor([[0.0, 1.0]]))),
+        patch('src.toxic_comments.api.model', DummyModel(np.array([[0.0, 1.0]]))),
     ):
         response = client.post('/predict', json={'text': 'hi'})
         assert response.status_code == 500
@@ -172,7 +172,7 @@ def test_predict_500_if_model_raises(client):
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
         patch(
             'src.toxic_comments.api.model',
-            DummyModel(torch.tensor([[0.0, 1.0]]), should_raise=True),
+            DummyModel(np.array([[0.0, 1.0]]), should_raise=True),
         ),
     ):
         response = client.post('/predict', json={'text': 'hi'})
@@ -184,7 +184,7 @@ def test_predict_500_invalid_logits_shape(client):
     """Test /predict returns 500 if logits have invalid shape."""
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
-        patch('src.toxic_comments.api.model', DummyModel(torch.tensor([[1.0]]))),
+        patch('src.toxic_comments.api.model', DummyModel(np.array([[1.0]]))),
     ):
         response = client.post('/predict', json={'text': 'hi'})
         assert response.status_code == 500
@@ -192,7 +192,7 @@ def test_predict_500_invalid_logits_shape(client):
 
 def test_predict_500_missing_id2label(client):
     """Test /predict returns 500 if model's id2label mapping is missing."""
-    logits = torch.tensor([[0.0, 10.0]])
+    logits = np.array([[0.0, 10.0]])
 
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
