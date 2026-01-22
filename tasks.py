@@ -34,22 +34,17 @@ def test(ctx: Context) -> None:
 
 
 @task
-def docker_build(ctx: Context, progress: str = 'plain') -> None:
+def docker_build_train(ctx: Context, progress: str = 'plain') -> None:
     """Build docker images."""
     ctx.run(
         f'docker build -t train:latest . -f dockerfiles/train.dockerfile --progress={progress} --platform linux/amd64',
         echo=True,
         pty=not WINDOWS,
     )
-    ctx.run(
-        f'docker build -t api:latest . -f dockerfiles/api.dockerfile --progress={progress} --platform linux/amd64',
-        echo=True,
-        pty=not WINDOWS,
-    )
 
 
 @task
-def docker_push(ctx: Context) -> None:
+def docker_push_train(ctx: Context) -> None:
     """Push docker images to artifact registry."""
     load_dotenv(override=True)
     artifactory = os.getenv('ARTIFACTORY')
@@ -58,9 +53,6 @@ def docker_push(ctx: Context) -> None:
 
     ctx.run(f'docker tag train:latest {artifactory}/train:latest', echo=True, pty=not WINDOWS)
     ctx.run(f'docker push {artifactory}/train:latest', echo=True, pty=not WINDOWS)
-
-    ctx.run(f'docker tag api:latest {artifactory}/api:latest', echo=True, pty=not WINDOWS)
-    ctx.run(f'docker push {artifactory}/api:latest', echo=True, pty=not WINDOWS)
 
 
 # Documentation commands
