@@ -284,7 +284,7 @@ We used **ruff** for both linting and formatting our code. Ruff was configured i
 >
 > Answer:
 
-In total we have implemented 72 tests. Primarily we are testing the data loading and preprocessing pipeline (test_data.py with 16 tests), the datamodule and dataset classes (test_datamodule.py with 13 tests), model initialization and training steps (test_model.py with 13 tests), the FastAPI endpoints including /health and /predict (test_api.py with 12 tests), and our invoke tasks for docker operations (test_tasks.py with 6 tests). These cover the most critical parts of our application including data integrity validation, model forward pass and training, API request/response handling, and infrastructure automation. We also have tests for drift monitoring functionality that validate metrics calculations and API parameter handling.
+In total we have implemented 71 tests. We are testing the data loading and preprocessing pipeline (test_data.py with 16 tests), the datamodule and dataset classes (test_datamodule.py with 13 tests), model initialization and training steps (test_model.py with 13 tests), the FastAPI endpoints including /health and /predict (test_api.py with 12 tests), and our invoke tasks for docker operations (test_tasks.py with 6 tests). These cover the most critical parts of our application including data integrity validation, model forward pass and training, API request/response handling, and infrastructure automation. We also have tests for drift monitoring functionality that validate metrics calculations and API parameter handling.
 
 ### Question 8
 
@@ -299,7 +299,9 @@ In total we have implemented 72 tests. Primarily we are testing the data loading
 >
 > Answer:
 
-Even with 100% code coverage, we would not trust the code to be completely error-free because coverage only measures which lines are executed, not the quality or completeness of the tests. It doesn't catch logical errors, edge cases not considered in tests, race conditions in concurrent code, or integration issues with external services. 
+The total code coverage of our project is 47%, which includes all core source code. This level of coverage is mainly due to time constraints and prioritization decisions during the project. Some components such as cloud integrations and Dockerized services are inherently harder to test using unit tests and were therefore covered only partially or through manual testing.
+
+Even if our code coverage were close to 100%, we would not consider the system to be completely error-free. Code coverage only indicates which lines of code are executed during testing, not whether the tests adequately verify correct behavior. High coverage does not guarantee protection against logical errors, untested edge cases, incorrect assumptions, race conditions in concurrent code, or failures arising from interactions with external services. For these reasons, code coverage should be seen as a helpful indicator, but not a definitive measure of software correctness or robustness.
 
 ### Question 9
 
@@ -442,7 +444,7 @@ For our project we developed three Docker images: one for training, second for t
 >
 > Answer:
 
-Debugging methods varied by team member and situation. We primarily used print statements and logging for quick debugging, and VS Code's debugger for interactive debugging sessions. For API debugging, we used FastAPI's automatic documentation at `/docs` and pytest's test client. We did perform profiling using Python's cProfile and snakeviz for visualization (included in dev dependencies). The profiling results are stored in `reports/profiles/prof.prof`. Profiling revealed that data loading could be optimized with multiple workers (configurable via `num_workers` in training.yaml). However, the code is far from perfect, there's always room for optimization in model inference speed and memory usage. 
+Debugging methods varied by team member and situation. We primarily used print statements and logging for quick debugging, and VS Code's debugger for interactive debugging sessions. For API debugging, we used FastAPI's automatic documentation at `/docs` and pytest's test client. We did perform profiling using Python's cProfile and snakeviz for visualization (included in dev dependencies). The profiling results are stored in `reports/profiles/prof.prof`. Profiling revealed that data loading could be optimized with multiple workers (configurable via `num_workers` in training.yaml). However, the code is far from perfect, there's always room for optimization in model inference speed and memory usage. We initially attempted to use the PyTorch Lightning profiler together with the TensorBoard frontend, but found the integration difficult to set up and interpret, which led us to prefer simpler profiling tools.
 
 ## Working in the cloud
 
