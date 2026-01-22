@@ -655,7 +655,13 @@ Yes, we implemented data drift monitoring in our deployed model through the `/mo
 >
 > Answer:
 
---- question 30 fill here ---
+The project involved several practical and organizational challenges, most of which were related to tooling, infrastructure, and rapidly evolving external platforms. One of the most significant struggles was working with Docker. While containerization was essential for reproducibility and deployment, the images quickly became very large and the setup process was complex. This was particularly frustrating during deployment, as slow upload speeds caused image pushes to take a considerable amount of time, significantly slowing down iteration.
+
+To mitigate this, we introduced dependency grouping using uv to better control which dependencies were installed for specific components (e.g., backend-only images). While this ultimately helped reduce image size and build time, it was itself a complex solution that required substantial experimentation. In hindsight, this structure should have been implemented from the beginning, as retrofitting it later added unnecessary overhead. Additionally, the commands required to selectively install dependency groups were not immediately intuitive, further increasing setup time.
+
+Another major time investment was resolving authentication and permission issues across multiple platforms, particularly Weights & Biases (wandb) and Google Cloud Platform (GCP). Determining correct role assignments and access permissions required extensive testing and trial-and-error before a stable configuration was achieved. Wandb itself posed several challenges, including an unintuitive team and project structure, difficulty managing experiments alongside external models within the same runs, and frequent UI changes that did not align with the course material.
+
+Finally, monitoring with Evidently was more difficult than expected, as both the package documentation and course resources were outdated, making correct usage unclear and requiring additional independent investigation.
 
 ### Question 31
 
@@ -673,14 +679,14 @@ Yes, we implemented data drift monitoring in our deployed model through the `/mo
 > *We have used ChatGPT to help debug our code. Additionally, we used GitHub Copilot to help write some of our code.*
 > Answer:
 
-fewafewubaofewnafioewnifowf ewafw afew afewafewafionewoanf waf ewonfieownaf fewnaiof newio fweanøf wea fewa
- fweafewa fewiagonwa ognwra'g
- wa
- gwreapig ipweroang w rag
- wa grwa
-  g
-  ew
-  gwea g
-  ew ag ioreabnguorwa bg̈́aw
-   wa
-   gew4igioera giroeahgi0wra gwa
+The project work was distributed clearly among all team members, with each contributing substantially to different technical aspects of the system.
+
+Flo (s251969) was primarily responsible for project structure, code quality, and reliability. This included setting up the initial repository environment, creating the cookiecutter-based project structure, enforcing coding standards using ruff, and implementing profiling. Flo also led testing and quality assurance by writing unit tests for data and model components, setting up continuous integration with linting, caching, and multi-environment testing, calculating code coverage, and configuring pre-commit hooks. Additionally, Flo contributed to monitoring and system-level considerations.
+
+Levi (s242957) focused mainly on the core machine learning pipeline and cloud integration. This included model implementation and training using PyTorch Lightning, experiment configuration and management with Hydra, logging and experiment tracking with Weights & Biases, and versioning data using DVC backed by a GCP bucket. Levi also handled cloud-based training, CI workflows triggered by data changes, Docker build automation, and deployment of the prediction and drift-detection APIs, including robustness evaluation under data drift.
+
+Rupak (s252684) was responsible for data handling and deployment-related components. This included implementing data loading and preprocessing, constructing and validating Docker images, and working on the inference API and deployment-oriented tasks such as API testing, load testing, and performance optimization.
+
+All members contributed to coding, documentation, debugging, and design discussions throughout the project.
+
+We used generative AI tools such as ChatGPT and GitHub Copilot as auxiliary aids for debugging, clarifying APIs, and improving code readability, while all core design decisions, implementations, and evaluations were performed by the team.
