@@ -641,7 +641,18 @@ Yes, we implemented data drift monitoring in our deployed model through the `/mo
 >
 > Answer:
 
---- question 29 fill here ---
+![](figures/our_overview.png)
+The above figure illustrates the overall architecture of our system, spanning local development, continuous integration, cloud-based training, and deployment. The starting point of the system is the local development environment, where all team members implement and test code for data processing, model training, inference, and monitoring. Docker is used to containerize the different components, ensuring reproducibility across environments.
+
+Whenever code is committed and pushed to GitHub, GitHub Actions is automatically triggered. These workflows perform linting, testing, and other quality checks before building Docker images. Once the checks pass, the images are pushed to the Google Cloud Artifact Registry. Separate images are built for the frontend, backend (inference API), and training pipeline.
+
+The frontend and backend services are deployed using Google Cloud Run. The frontend sends user-provided text comments to the backend, which exposes an API for inference and monitoring. For model training, the training container is executed in Google Cloud using Vertex AI. This training job logs metrics, configurations, and artifacts to Weights & Biases, which is used for experiment tracking and comparison.
+
+The trained model checkpoint is stored as an artifact in Weights & Biases. After training, the model is converted into the ONNX format to enable more efficient inference. The resulting ONNX model is then stored in a Google Cloud Storage bucket, which acts as the centralized model storage.
+
+During runtime, the backend service pulls the latest ONNX model from the GCP bucket and loads it to serve inference requests. Incoming text comments from the frontend are classified as either toxic or non-toxic. Additionally, the backend exposes a monitoring endpoint that uses Evidently to perform data drift analysis by comparing incoming data to the reference training data.
+
+Overall, this architecture enables a modular, scalable, and reproducible machine learning system with automated testing, cloud-based training, experiment tracking, and production-ready deployment.
 
 ### Question 30
 
