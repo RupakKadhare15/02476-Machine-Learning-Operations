@@ -5,6 +5,7 @@ CKPT_PATH = "models/best-checkpoint.ckpt"
 ONNX_PATH = "models/model.onnx"
 
 def main():
+    """Convert the model to onnx"""
     print(f"Loading checkpoint from: {CKPT_PATH}")
     model = ToxicCommentsTransformer.load_from_checkpoint(CKPT_PATH)
     model.eval()
