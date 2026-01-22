@@ -426,7 +426,7 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 >
 > Answer:
 
-For our project we developed two Docker images: one for training and one for API deployment. The training image (train.dockerfile) uses the uv base image, installs system dependencies, syncs Python packages, then crucially overrides the CPU-only PyTorch with GPU-enabled version (cu128) for Vertex AI training. To run the training docker image locally: `docker run trainer:latest`. For deployment, we have api.dockerfile for the FastAPI service. The docker images are automatically built and pushed to GCP Artifact Registry via Cloud Build triggers defined in `gcp/cloudbuild.yaml`. We also use invoke tasks to manage docker operations: `uv run invoke docker-build` and `uv run invoke docker-push`. Link to train dockerfile: [train.dockerfile](../dockerfiles/train.dockerfile).
+For our project we developed three Docker images: one for training, second for the frontend and last one for API deployment. The training image (train.dockerfile) uses the uv base image, installs system dependencies, syncs Python packages, then crucially overrides the CPU-only PyTorch with GPU-enabled version (cu128) for Vertex AI training. To run the training docker image locally: `docker run trainer:latest`. The frontend.dockerfile is responsible for the user interface application (typically Streamlit in this context) and for the deployment, we have api.dockerfile for the FastAPI service. The docker images are automatically built and pushed to GCP Artifact Registry via Cloud Build triggers defined in `gcp/cloudbuild.yaml`. We also use invoke tasks to manage docker operations: `uv run invoke docker-build` and `uv run invoke docker-push`. Link to train dockerfile: [train.dockerfile](../dockerfiles/train.dockerfile) , api dockerfile: [api.dockerfile](../dockerfiles/api.dockerfile) and frontend dockerfile: [frontend.dockerfile](../dockerfiles/frontend.dockerfile)).
 
 ### Question 16
 
@@ -545,7 +545,7 @@ Yes, we managed to train our model in the cloud using Vertex AI. We configured a
 >
 > Answer:
 
---- question 23 fill here ---
+Yes, we were successful to write an API for our toxic comment classification model using the FastAPI. For the efficient model inference we have  utilised the ONNX Runtime, which is wrapped in lifespan. Additionally, the model weights are automatically downloaded from Google Cloud Storage (GCS) if they are missing locally. The ‘/health’ endpoint is to verify that the service is operational. The core function is ‘/predict’ which tokenizes the input text, runs the ONNX model, and applies a softmax function to calculate confidence scores which is used to retreive the correct output LABEL. This entire application is used in the [api.dockerfile](../dockerfiles/api.dockerfile) to streamline the deployment part.
 
 ### Question 24
 
@@ -561,7 +561,13 @@ Yes, we managed to train our model in the cloud using Vertex AI. We configured a
 >
 > Answer:
 
---- question 24 fill here ---
+Yes, we have successfully utilised the Google Cloud Platform (GCP) for the deployment of our API on the cloud. We first wrapped our application logic into a Docker container. We tagged the local image and pushed it to the Google Artifact Registry in the europe-north2 region.
+
+We deployed the backend on Google Cloud Run for the of serving backend infrastructure. We also deployed a Streamlit frontend that serves as a user interface for the model.
+
+To invoke the API using Command Line, a user needs to sends a request with a to the /predict endpoint. Below given is a sample on how could you do it:
+
+ *`curl -X POST <your-backend-app-url>/predict -H "Content-Type: application/json" -d '{"text": "example is the best thing”}`*
 
 ### Question 25
 
