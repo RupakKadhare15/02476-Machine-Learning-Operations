@@ -4796,6 +4796,9 @@ definitely-not-dev = [
     { name = "torch", version = "2.10.0+cpu", source = { registry = "https://download.pytorch.org/whl/cpu" }, marker = "sys_platform != 'darwin'" },
     { name = "tqdm" },
 ]
+dev = [
+    { name = "markdown" },
+]
 frontend = [
     { name = "requests" },
     { name = "streamlit" },
@@ -4862,6 +4865,7 @@ definitely-not-dev = [
     { name = "torch", specifier = ">=2.6.0", index = "https://download.pytorch.org/whl/cpu" },
     { name = "tqdm", specifier = ">=4.67.1" },
 ]
+dev = [{ name = "markdown", specifier = ">=3.10.1" }]
 frontend = [
     { name = "requests", specifier = ">=2.32.5" },
     { name = "streamlit", specifier = ">=1.53.0" },
