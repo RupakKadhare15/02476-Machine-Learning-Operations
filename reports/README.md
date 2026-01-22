@@ -426,7 +426,7 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 >
 > Answer:
 
-For our project we developed two Docker images: one for training and one for API deployment. The training image (train.dockerfile) uses the uv base image, installs system dependencies, syncs Python packages, then crucially overrides the CPU-only PyTorch with GPU-enabled version (cu128) for Vertex AI training. To run the training docker image locally: `docker run trainer:latest`. For deployment, we have api.dockerfile for the FastAPI service. The docker images are automatically built and pushed to GCP Artifact Registry via Cloud Build triggers defined in `gcp/cloudbuild.yaml`. We also use invoke tasks to manage docker operations: `uv run invoke docker-build` and `uv run invoke docker-push`. Link to train dockerfile: [train.dockerfile](../dockerfiles/train.dockerfile).
+For our project we developed three Docker images: one for training, second for the frontend and last one for API deployment. The training image (train.dockerfile) uses the uv base image, installs system dependencies, syncs Python packages, then crucially overrides the CPU-only PyTorch with GPU-enabled version (cu128) for Vertex AI training. To run the training docker image locally: `docker run trainer:latest`. The frontend.dockerfile is responsible for the user interface application (typically Streamlit in this context) and for the deployment, we have api.dockerfile for the FastAPI service. The docker images are automatically built and pushed to GCP Artifact Registry via Cloud Build triggers defined in `gcp/cloudbuild.yaml`. We also use invoke tasks to manage docker operations: `uv run invoke docker-build` and `uv run invoke docker-push`. Link to train dockerfile: [train.dockerfile](../dockerfiles/train.dockerfile) , api dockerfile: (../dockerfiles/api.dockerfile) and frontend dockerfile: (../dockerfiles/frontend.dockerfile).
 
 ### Question 16
 
@@ -544,8 +544,6 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 > Answer:
 
 Yes, we were successful to write an API for our toxic comment classification model using the FastAPI. For the efficient model inference we have  utilised the ONNX Runtime, which is wrapped in lifespan. Additionally, the model weights are automatically downloaded from Google Cloud Storage (GCS) if they are missing locally. The ‘/health’ endpoint is to verify that the service is operational. The core function is ‘/predict’ which tokenizes the input text, runs the ONNX model, and applies a softmax function to calculate confidence scores which is used to retreive the correct output LABEL. This entire application is used in the [api.dockerfile](../dockerfiles/api.dockerfile) to streamline the deployment part.
-
---- question 23 fill here ---
 
 ### Question 24
 
