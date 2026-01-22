@@ -120,9 +120,9 @@ will check the repositories and the code to verify your answers.
     - @Levi
 * [X] Create a data storage in GCP Bucket for your data and link this with your data version control setup (M21)
     - @Levi
-* [ ] Create a trigger workflow for automatically building your docker images (M21)
+* [X] Create a trigger workflow for automatically building your docker images (M21)
     - @Levi
-* [ ] Get your model training in GCP using either the Engine or Vertex AI (M21)
+* [X] Get your model training in GCP using either the Engine or Vertex AI (M21)
     - @Levi
 * [ ] Create a FastAPI application that can do inference using your model (M22)
     - @Rupak
@@ -140,9 +140,14 @@ will check the repositories and the code to verify your answers.
 
 ### Week 3
 
-* [ ] Check how robust your model is towards data drifting (M27)
+* [X] Check how robust your model is towards data drifting (M27)
+    We test model robustness using the Reddit toxic comments dataset (https://www.kaggle.com/datasets/estebanmarcelloni/ruddit-papers-comments-scored). This dataset was sourced from a different platform but inherently contains comments that are either toxic or not, therefore it makes a good candidate for testing data drift.
+    1. We load the Reddit dataset and pass the comments through our inference API to obtain predictions.
+    2. We then call the /monitoring endpoint of our API, which generates a data drift report comparing the Reddit dataset (current data) with our original training dataset (reference data).
+    3. We also calculate the performance of our model quantified by accuracy, F1, ROCAUC scores on the Reddit dataset.
     - @Levi
-* [ ] Deploy to the cloud a drift detection API (M27)
+* [X] Deploy to the cloud a drift detection API (M27)
+    - The drift detection API is deployed in the same service as the prediction API, and it can be reached at `/monitoring` endpoint.
     - @Levi
 * [ ] Instrument your API with a couple of system metrics (M28)
     - @Flo
@@ -150,7 +155,8 @@ will check the repositories and the code to verify your answers.
     - @Flo
 * [ ] Create one or more alert systems in GCP to alert you if your app is not behaving correctly (M28)
     - @Flo
-* [ ] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+* [X] If applicable, optimize the performance of your data loading using distributed data loading (M29)
+    In the configs/training.yaml file, num_workers can be configured to use multiple workers for data loading.
     - @Levi
 * [ ] If applicable, optimize the performance of your training pipeline by using distributed training (M30)
     - @Rupak
@@ -173,7 +179,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 1 fill here ---
+100
 
 ### Question 2
 > **Enter the study number for each member in the group**
@@ -184,7 +190,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 2 fill here ---
+s242957, s251969, s252684
 
 ### Question 3
 > **A requirement to the project is that you include a third-party package not covered in the course. What framework**
@@ -198,7 +204,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 3 fill here ---
+We used the third-party framework **Transformers** from Hugging Face in our project. We used the `AutoTokenizer` for text preprocessing and tokenization, `AutoModelForSequenceClassification` for loading pretrained transformer models (specifically BERTweet), and `AutoConfig` for managing model configurations with custom label mappings. The framework was essential for implementing our toxic comment classification system, as it provided the pretrained language model backbone (`vinai/bertweet-base`) that we fine-tuned on our dataset. Additionally, we leveraged the framework's integration with PyTorch Lightning to streamline the training pipeline, and its tokenization utilities to handle Twitter-specific text normalization. This significantly accelerated development and allowed us to focus on MLOps infrastructure rather than building transformers from scratch.
 
 ## Coding environment
 
@@ -218,7 +224,17 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 4 fill here ---
+We used **uv** for managing our dependencies in this project. All dependencies are specified in the `pyproject.toml` file under the `[project.dependencies]` section for production dependencies and `[dependency-groups.dev]` for development dependencies. The `uv.lock` file ensures reproducible installations by locking exact versions of all dependencies and their transitive dependencies.
+
+To get an exact copy of our development environment, a new team member would need to:
+
+1. Install `uv` (if not already installed): `pip install uv`
+2. Clone the repository
+3. Navigate to the project root directory
+4. Run `uv sync --dev` to install all dependencies (both production and development)
+
+This will automatically create a virtual environment and install all packages with the exact versions specified in the lock file. The project requires Python 3.12, which is specified in both `pyproject.toml` and `.python-version`. For PyTorch specifically, we configured `uv` to use the CPU-only PyTorch index to reduce dependency size, as defined in the `[tool.uv.sources]` section of `pyproject.toml`.
+
 
 ### Question 5
 
@@ -234,7 +250,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 5 fill here ---
+From the cookiecutter template we filled out the `src/` folder containing our main application code (`data.py`, `model.py`, `train.py`, `evaluate.py`), the `tests/` folder with unit tests for data and model components, the `configs/` folder with Hydra configuration files for training and evaluation, and the `dockerfiles/` folder with container definitions for training and API deployment. We also made use of the `tasks.py` file in the root directory and defined extra invoke commands for common operations like training and evaluation. We have added a gcp folder that contains scripts for deploying to Google Cloud Platform. We have removed the `notebooks/` folder as we did not use Jupyter notebooks in our workflow. 
 
 ### Question 6
 
@@ -249,7 +265,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 6 fill here ---
+We used **ruff** for both linting and formatting our code. Ruff was configured in `pyproject.toml` with line length of 120 characters, and specific linting rules enabled (imports, errors, warnings, docstrings). We implemented **type hints** throughout our codebase using Python's type annotations for function parameters and return values. For documentation, we used **Google-style docstrings** for all classes and functions, which are enforced by ruff's docstring linting rules. We also implemented **pre-commit hooks** to automatically run ruff checks before each commit. These concepts are critical in larger projects because they ensure code consistency across team members, make the codebase more maintainable, catch bugs early through type checking, and provide clear documentation for future developers. Type hints particularly help with IDE autocomplete and make refactoring safer.
 
 ## Version control
 
@@ -268,7 +284,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 7 fill here ---
+In total we have implemented 72 tests. Primarily we are testing the data loading and preprocessing pipeline (test_data.py with 16 tests), the datamodule and dataset classes (test_datamodule.py with 13 tests), model initialization and training steps (test_model.py with 13 tests), the FastAPI endpoints including /health and /predict (test_api.py with 12 tests), and our invoke tasks for docker operations (test_tasks.py with 6 tests). These cover the most critical parts of our application including data integrity validation, model forward pass and training, API request/response handling, and infrastructure automation. We also have tests for drift monitoring functionality that validate metrics calculations and API parameter handling.
 
 ### Question 8
 
@@ -283,7 +299,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 8 fill here ---
+Even with 100% code coverage, we would not trust the code to be completely error-free because coverage only measures which lines are executed, not the quality or completeness of the tests. It doesn't catch logical errors, edge cases not considered in tests, race conditions in concurrent code, or integration issues with external services. 
 
 ### Question 9
 
@@ -298,7 +314,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 9 fill here ---
+Yes, we made use of both branches and pull requests in our project. Based on the checklist annotations (e.g., @Flo, @Levi, @Rupak), each member worked on specific features in their own branches. The main branch was protected, and code had to be merged through pull requests which allowed for code review before integration. This workflow helped us maintain code quality, catch bugs early through peer review, and avoid conflicts by keeping work isolated until it was ready to merge. Pull requests also served as documentation of what changes were made and why, providing context for future reference. Our CI/CD pipelines were configured to run on pull requests, ensuring that tests passed and code was properly formatted before merging.
 
 ### Question 10
 
@@ -313,7 +329,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 10 fill here ---
+We did make use of DVC in our project to manage our toxic comments dataset. We configured DVC to use a Google Cloud Storage bucket as the remote storage backend. This is evidenced by the `data.dvc` file in the repository root and our `.github/workflows/cml_data.yaml` workflow that triggers on data changes. DVC helped us in several ways: (1) It kept our git repository lightweight by not storing large CSV files directly, (2) It enabled reproducibility by tracking exact versions of the dataset used for each experiment, (3) It facilitated team collaboration as multiple members could pull the same dataset versions, and (4) It integrated with our CI/CD pipeline through the CML workflow to automatically detect and validate data changes. This was particularly important as our training dataset contains 120,000 samples and our computed GLOVE embeddings file is ~109MB.
 
 ### Question 11
 
@@ -330,7 +346,17 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 11 fill here ---
+We have organized our continuous integration into 4 separate workflow files: 
+
+1. **tests.yaml** - Runs unit tests with pytest across multiple operating systems (Ubuntu, Windows, macOS), multiple Python versions (3.11, 3.12), and multiple PyTorch versions (2.6.0, 2.7.0). This uses matrix strategy for comprehensive testing and caching of uv dependencies for faster builds.
+
+2. **linting.yaml** - Runs ruff linting and formatting checks to ensure code quality and style consistency.
+
+3. **cml_data.yaml** - Triggers on data changes (via DVC), validates data integrity, and can optionally run training and post results as comments using CML (Continuous Machine Learning).
+
+4. **pre-commit-update.yaml** - Automatically updates pre-commit hooks on a schedule to keep dependencies current.
+
+All workflows use caching for uv dependencies and authenticate with GCP for accessing data and artifacts. An example workflow run can be seen in our tests.yaml which runs 18 different test configurations (3 OS × 2 Python × 2 PyTorch versions).
 
 ## Running code and tracking experiments
 
@@ -349,7 +375,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 12 fill here ---
+We used Hydra for configuration management with YAML config files. Our main configuration files are `configs/training.yaml` and `configs/evaluation.yaml`. To run an experiment, you would use: `uv run invoke train` which internally calls `uv run src/toxic_comments/train.py`. Hydra automatically loads the training.yaml config, and you can override parameters using the syntax: `uv run src/toxic_comments/train.py data_dir=custom/path learning_rate=1e-4 batch_size=64`. All hyperparameters including batch_size (32), learning_rate (2e-5), epochs (2), max_length (128), and model_name_or_path (vinai/bertweet-base) are defined in the config files, making experiments easily reproducible and modifiable.
 
 ### Question 13
 
@@ -364,7 +390,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 13 fill here ---
+We secured reproducibility through multiple mechanisms: (1) All hyperparameters are stored in Hydra config files (training.yaml, evaluation.yaml) which are version controlled in git, (2) Each experiment is logged to Weights & Biases which automatically captures the config file, git commit hash, and system information, (3) Model checkpoints are saved with their configs using PyTorch Lightning's built-in checkpoint system, (4) We use DVC to version control the exact dataset used for training, and (5) Our dependencies are locked in uv.lock file ensuring exact package versions. When an experiment runs, Hydra saves the complete config to the output directory under `outputs/YYYY-MM-DD/HH-MM-SS/.hydra/`, and W&B logs all metrics, artifacts, and system information. To reproduce an experiment, one would checkout the specific git commit, pull the correct data version with `dvc pull`, and run training with the saved config.
 
 ### Question 14
 
@@ -396,7 +422,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 15 fill here ---
+For our project we developed two Docker images: one for training and one for API deployment. The training image (train.dockerfile) uses the uv base image, installs system dependencies, syncs Python packages, then crucially overrides the CPU-only PyTorch with GPU-enabled version (cu128) for Vertex AI training. To run the training docker image locally: `docker run trainer:latest`. For deployment, we have api.dockerfile for the FastAPI service. The docker images are automatically built and pushed to GCP Artifact Registry via Cloud Build triggers defined in `gcp/cloudbuild.yaml`. We also use invoke tasks to manage docker operations: `uv run invoke docker-build` and `uv run invoke docker-push`. Link to train dockerfile: [train.dockerfile](../dockerfiles/train.dockerfile).
 
 ### Question 16
 
@@ -411,7 +437,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 16 fill here ---
+Debugging methods varied by team member and situation. We primarily used print statements and logging for quick debugging, and VS Code's debugger for interactive debugging sessions. For API debugging, we used FastAPI's automatic documentation at `/docs` and pytest's test client. We did perform profiling using Python's cProfile and snakeviz for visualization (included in dev dependencies). The profiling results are stored in `reports/profiles/prof.prof`. Profiling revealed that data loading could be optimized with multiple workers (configurable via `num_workers` in training.yaml). However, the code is far from perfect, there's always room for optimization in model inference speed and memory usage.
 
 ## Working in the cloud
 
@@ -428,7 +454,17 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 17 fill here ---
+We used the following GCP services:
+
+1. **Cloud Storage (Buckets)** - For storing datasets (tweets-dataset bucket with training data and GLOVE embeddings ~272MB) and prediction logs (predictions_db bucket). Also used as DVC remote storage.
+
+2. **Artifact Registry** - For storing and versioning our Docker images (train and api images) that are built via Cloud Build.
+
+3. **Cloud Run** - For automatically building and pushing Docker images when code changes, configured via cloudbuild.yaml and vertex_ai_train_cloudbuild.yaml.
+
+4. **Vertex AI** - For training our models on GPU instances (T4 GPUs) in the cloud, triggered by Cloud Build.
+
+4. + 1 **Google Cloud Storage API** (via google-cloud-storage Python library) - For programmatic access to buckets from our FastAPI application for downloading embeddings and managing predictions.
 
 ### Question 18
 
@@ -443,7 +479,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 18 fill here ---
+We primarily used Vertex AI for training rather than directly using Compute Engine VMs. Vertex AI runs our training jobs on managed compute with the following configuration: We used instances with T4 GPUs (specified in our training container) and the jobs were started using our custom Docker container from Artifact Registry (train:latest). The training configuration is defined in `gcp/train_config.yaml` and `gcp/vertex_ai_train_cloudbuild.yaml`. Vertex AI abstracts away the VM management, automatically provisions the hardware, runs our containerized training job, and tears down resources when complete, which is more cost-effective than maintaining persistent Compute Engine instances. Our Docker image installs PyTorch with CUDA 12.8 support to utilize the GPU acceleration.
 
 ### Question 19
 
@@ -533,7 +569,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 25 fill here ---
+For unit testing we used pytest with FastAPI's TestClient and unittest.mock for mocking external dependencies. We have 12 API-specific tests in test_api.py covering health checks, prediction endpoints with various inputs and error conditions, and proper status code handling. The tests mock model loading, GCS client, and database operations to run quickly without external dependencies. We have not yet performed formal load testing with tools like Locust or k6, but this would be important before production deployment to understand throughput limits, response times under load, and identify bottlenecks. Load testing would help determine optimal instance sizing and autoscaling thresholds for cloud deployment.
 
 ### Question 26
 
@@ -548,7 +584,7 @@ will check the repositories and the code to verify your answers.
 >
 > Answer:
 
---- question 26 fill here ---
+Yes, we implemented data drift monitoring in our deployed model through the `/monitoring` endpoint. The system works by: (1) Storing every prediction in GCS (predictions_db bucket), (2) When monitoring is requested, downloading reference training embeddings and GLOVE vectors from GCS, (3) Computing GLOVE embeddings for recent predictions to convert text to numerical features, (4) Using Evidently's DataDriftPreset to detect statistical drift across 50 embedding dimensions, (5) Calculating cosine similarity between reference and current data distributions, (6) Generating an interactive HTML report with drift metrics and visualizations. This helps longevity by alerting us when the input distribution shifts significantly from training data, indicating potential model performance degradation and need for retraining. We also tested robustness against the Reddit toxic comments dataset (different platform, similar task) and calculated accuracy, F1, and ROC-AUC metrics to quantify performance on drifted data.
 
 ## Overall discussion of project
 

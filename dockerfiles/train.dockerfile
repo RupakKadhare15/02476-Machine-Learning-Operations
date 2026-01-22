@@ -12,6 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-install-project --no-cache --python 3.12
 
+# 3.5. Override PyTorch with GPU-enabled version for training
+# This replaces the CPU-only version specified in pyproject.toml
+RUN uv pip install --no-cache torch torchvision --index-url https://download.pytorch.org/whl/cu128
+
 # 4. Copy Source Code AND Configs
 COPY configs/ configs/
 COPY src/ src/

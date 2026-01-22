@@ -35,8 +35,6 @@ steps:
     'example-mlops-job',
     '--config',
     '${_VERTEX_TRAIN_CONFIG}',
-    '--command',
-    'uv run invoke train data_dir=/gcs/tweets-dataset/data',
   ]
 substitutions:
   _VERTEX_TRAIN_CONFIG: 'train_config.yaml'

@@ -59,6 +59,9 @@ def docker_push(ctx: Context) -> None:
     ctx.run(f'docker tag train:latest {artifactory}/train:latest', echo=True, pty=not WINDOWS)
     ctx.run(f'docker push {artifactory}/train:latest', echo=True, pty=not WINDOWS)
 
+    ctx.run(f'docker tag api:latest {artifactory}/api:latest', echo=True, pty=not WINDOWS)
+    ctx.run(f'docker push {artifactory}/api:latest', echo=True, pty=not WINDOWS)
+
 
 # Documentation commands
 @task
