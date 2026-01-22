@@ -1,12 +1,10 @@
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from types import SimpleNamespace
-from typing import Dict, Optional
 from unittest.mock import patch
 
-import pytest
 import numpy as np
+import pytest
 from fastapi.testclient import TestClient
 
 import src.toxic_comments.api as api
@@ -29,6 +27,7 @@ def client():
 # Dummy classes to mock tokenizer and model behavior
 class DummyTokenizer:
     """A dummy tokenizer that can optionally raise an error."""
+
     def __init__(self, should_raise: bool = False):
         """Initialize the dummy tokenizer."""
         self.should_raise = should_raise
@@ -63,8 +62,9 @@ class DummyModel:
     def freeze(self):
         """Dummy freeze method."""
         return self
-    
+
     def run(self, output_names=None, ort_inputs=None):
+        """Return logits or raise an error."""
         if self.should_raise:
             raise RuntimeError("boom")
         # must be indexable because your code does ...[0]
