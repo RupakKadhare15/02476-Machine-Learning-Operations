@@ -50,13 +50,11 @@ class DummyModel:
     def __init__(
         self,
         logits: np.ndarray,
-        id2label: Optional[Dict[int, str]] = None,
         should_raise: bool = False,
     ):
         """Initialize the dummy model."""
-        self.logits = logits
+        self._logits = logits
         self.should_raise = should_raise
-        self.config = SimpleNamespace(id2label=id2label or {0: 'non-toxic', 1: 'toxic'})
 
     def eval(self):
         """Dummy eval method."""
@@ -65,12 +63,12 @@ class DummyModel:
     def freeze(self):
         """Dummy freeze method."""
         return self
-
-    def __call__(self, **inputs):
-        """Return logits or raise an error."""
+    
+    def run(self, output_names=None, ort_inputs=None):
         if self.should_raise:
-            raise RuntimeError('boom')
-        return SimpleNamespace(logits=self.logits)
+            raise RuntimeError("boom")
+        # must be indexable because your code does ...[0]
+        return [self._logits]
 
 
 # first test: health endpoint
@@ -128,7 +126,7 @@ def test_predict_non_toxic_success(client):
         body = response.json()
 
         assert response.status_code == 200
-        assert body['label'] == 'non-toxic'
+        assert body['label'] == 'NON-TOXIC'
         assert body['is_toxic'] is False
         assert isinstance(body['confidence'], float)
         assert 0.0 <= body['confidence'] <= 1.0
@@ -149,7 +147,7 @@ def test_predict_toxic_success(client):
         print(f"The problem is , {body}")
 
         assert response.status_code == 200
-        assert body['label'] == 'toxic'
+        assert body['label'] == 'TOXIC'
         assert body['is_toxic'] is True
         assert body['confidence'] >= 0.5
 
@@ -189,17 +187,3 @@ def test_predict_500_invalid_logits_shape(client):
         response = client.post('/predict', json={'text': 'hi'})
         assert response.status_code == 500
 
-
-def test_predict_500_missing_id2label(client):
-    """Test /predict returns 500 if model's id2label mapping is missing."""
-    logits = np.array([[0.0, 10.0]])
-
-    with (
-        patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
-        patch(
-            'src.toxic_comments.api.model',
-            DummyModel(logits, id2label={0: 'non-toxic'}),
-        ),
-    ):
-        response = client.post('/predict', json={'text': 'hi'})
-        assert response.status_code == 500
