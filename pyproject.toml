@@ -85,6 +85,9 @@ frontend = [
     "requests>=2.32.5",
     "streamlit>=1.53.0",
 ]
+dev = [
+    "markdown>=3.10.1",
+]
 
 
 [tool.uv.sources]
