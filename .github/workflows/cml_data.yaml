@@ -53,7 +53,7 @@ jobs:
           echo '![](./reports/figures/text_length_by_class.png)' >> report.md
   
       - name: Setup cml
-        uses: iterative/setup-cml@v2
+        uses: iterative/setup-cml@v3
 
       - name: Comment on PR
         env:
