@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen --no-install-project --no-cache --python 3.12
+RUN uv sync --frozen --no-install-project --no-cache --python 3.12 --group frontend
 
 COPY src/toxic_comments/frontend.py .
 

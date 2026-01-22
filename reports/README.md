@@ -231,7 +231,7 @@ To get an exact copy of our development environment, a new team member would nee
 1. Install `uv` (if not already installed): `pip install uv`
 2. Clone the repository
 3. Navigate to the project root directory
-4. Run `uv sync --dev` to install all dependencies (both production and development)
+4. Run `uv sync --all-group` to install all dependencies (both production and development)
 
 This will automatically create a virtual environment and install all packages with the exact versions specified in the lock file. The project requires Python 3.12, which is specified in both `pyproject.toml` and `.python-version`. For PyTorch specifically, we configured `uv` to use the CPU-only PyTorch index to reduce dependency size, as defined in the `[tool.uv.sources]` section of `pyproject.toml`.
 
