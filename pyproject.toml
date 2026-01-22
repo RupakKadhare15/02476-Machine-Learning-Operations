@@ -105,7 +105,11 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-omit = ["tests/*"]
+source = ["src"]
+omit = ["test", "*/_remote_module_non_scriptable*", "/tmp/*",]
+
+[tool.coverage.report]
+show_missing = true
 
 [project.scripts]
 train = "toxic_comments.train:main"
