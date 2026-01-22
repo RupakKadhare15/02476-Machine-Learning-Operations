@@ -559,7 +559,13 @@ Yes, we were successful to write an API for our toxic comment classification mod
 >
 > Answer:
 
---- question 24 fill here ---
+Yes, we have successfully utilised the Google Cloud Platform (GCP) for the deployment of our API on the cloud. We first wrapped our application logic into a Docker container. We tagged the local image and pushed it to the Google Artifact Registry in the europe-north2 region.
+
+We deployed the backend on Google Cloud Run for the of serving backend infrastructure. We also deployed a Streamlit frontend that serves as a user interface for the model.
+
+To invoke the API using Command Line, a user needs to sends a request with a to the /predict endpoint. Below given is a sample on how could you do it:
+
+ *`curl -X POST <your-backend-app-url>/predict -H "Content-Type: application/json" -d '{"text": "example is the best thing”}`*
 
 ### Question 25
 
