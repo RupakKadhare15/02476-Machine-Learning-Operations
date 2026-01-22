@@ -2,7 +2,7 @@ import requests
 import streamlit as st
 
 # --- Configuration ---
-API_URL = 'http://127.0.0.1:8000/predict'
+API_URL = 'https://toxic-backend-664727552674.europe-north2.run.app/predict'
 
 # --- UI Layout ---
 st.set_page_config(page_title='Toxic Comment Classifier', page_icon='🛡️')
