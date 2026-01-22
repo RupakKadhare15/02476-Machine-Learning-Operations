@@ -123,6 +123,7 @@ def test_predict_non_toxic_success(client):
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
         patch('src.toxic_comments.api.model', DummyModel(logits)),
+        patch('src.toxic_comments.api.add_to_db'),
     ):
         response = client.post('/predict', json={'text': 'hello'})
         body = response.json()
@@ -141,6 +142,7 @@ def test_predict_toxic_success(client):
     with (
         patch('src.toxic_comments.api.tokenizer', DummyTokenizer()),
         patch('src.toxic_comments.api.model', DummyModel(logits)),
+        patch('src.toxic_comments.api.add_to_db'),
     ):
         response = client.post('/predict', json={'text': 'you are awful'})
         body = response.json()

@@ -2,13 +2,6 @@ outs:
 - hash: md5
   path: data
   files:
-  - relpath: asd.txt
-    md5: d41d8cd98f00b204e9800998ecf8427e
-    size: 0
-    cloud:
-      remote_storage:
-        etag: 08a7d5f9d7da8f92031001
-        version_id: '1768554437175975'
   - relpath: data.zip
     md5: 880e0f562c18242133cd1edd67834f84
     size: 21446622
@@ -16,6 +9,20 @@ outs:
       remote_storage:
         etag: 08989883b8b38d92031001
         version_id: '1768475181763608'
+  - relpath: glove.6B.50d.txt
+    md5: 0fac3659c38a4c0e9432fe603de60b12
+    size: 171350079
+    cloud:
+      remote_storage:
+        etag: 08acc6d8b9819d92031001
+        version_id: '1769011519300396'
+  - relpath: ruddit_comments_score.csv
+    md5: c5d86236c01326424c0557bb597f31e9
+    size: 1247531
+    cloud:
+      remote_storage:
+        etag: 08c9b3b7b5a89c92031001
+        version_id: '1768987619613129'
   - relpath: test.csv
     md5: 6f359c32f9dc0045c786cd5676859177
     size: 6649710
@@ -30,6 +37,13 @@ outs:
       remote_storage:
         etag: 0897e6f6e4b38d92031001
         version_id: '1768475275932439'
+  - relpath: train_embeddings.csv
+    md5: 086860e5f5bb0182610c2c5f9b946363
+    size: 114122568
+    cloud:
+      remote_storage:
+        etag: 0890e6b2b3819d92031001
+        version_id: '1769011506098960'
   - relpath: validation.csv
     md5: 657c63c27fa9ef4c88d0cb3acff71f79
     size: 6608296

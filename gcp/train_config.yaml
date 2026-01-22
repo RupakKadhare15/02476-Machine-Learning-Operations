@@ -6,6 +6,8 @@ workerPoolSpecs:
     replicaCount: 1
     containerSpec:
         imageUri: europe-north2-docker.pkg.dev/mlops-group-100-484410/models/train:latest
+        args:
+        - "--data-dir=/gcs/tweets-dataset/data"
         env:
         - name: WANDB_API_KEY
           value: $WANDB_API_KEY
