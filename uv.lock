@@ -4773,7 +4773,7 @@ backend = [
     { name = "scipy" },
     { name = "uvicorn" },
 ]
-dev = [
+definitely-not-dev = [
     { name = "coverage" },
     { name = "dvc" },
     { name = "dvc-gs" },
@@ -4840,7 +4840,7 @@ backend = [
     { name = "scipy", specifier = ">=1.17.0" },
     { name = "uvicorn", specifier = "==0.40.0" },
 ]
-dev = [
+definitely-not-dev = [
     { name = "coverage", specifier = "==7.6.9" },
     { name = "dvc", specifier = ">=3.66.1" },
     { name = "dvc-gs", specifier = ">=3.0.2" },
