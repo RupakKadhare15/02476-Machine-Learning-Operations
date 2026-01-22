@@ -528,6 +528,8 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 
 Yes, we managed to train our model in the cloud using Vertex AI. We configured a Cloud Build trigger that submits training jobs to Vertex AI using our custom Docker container from Artifact Registry. The configuration is defined in `gcp/vertex_ai_train_cloudbuild.yaml` and `gcp/train_config.yaml`. We chose Vertex AI because it abstracts away VM management and provides easy integration with containerized training jobs that support GPU acceleration. However, we encountered an issue where the training job ran successfully but did not utilize the GPU as expected. Due to time constraints and the lengthy VM provisioning time for each debugging iteration, we were unable to fully investigate the root cause. Although we had to shut down the training job prematurely, as with only CPU it would take an impractical amount of time to complete, we are confident that with further debugging we could resolve the GPU utilization issue.
 
+![](figures/vertex.png)
+
 ## Deployment
 
 ### Question 23
@@ -608,7 +610,7 @@ Yes, we implemented data drift monitoring in our deployed model through the `/mo
 >
 > Answer:
 
---- question 27 fill here ---
+Honestly, our services have not been running in the cloud for an extended period, so proportionally our largest expense was storing Docker images in Artifact Registry ($0.11), followed by Cloud Storage ($0.03), and Cloud Build ($0.01). However, if we had kept the services running for a longer duration, training on Vertex AI and hosting the application would have become the most expensive services due to GPU/CPU compute costs. Working in the cloud was challenging, we faced several issues with authentication, permissions, and service configurations that required significant time to resolve. However, when our application finally went live, it was the most satisfying part of the project. 
 
 ### Question 28
 
@@ -624,7 +626,7 @@ Yes, we implemented data drift monitoring in our deployed model through the `/mo
 >
 > Answer:
 
---- question 28 fill here ---
+![](figures/frontend.png) We implemented a simple frontend for our FastAPI model prediction API using streamlit. The frontend allows users to input text comments directly in the browser and receive toxicity predictions without needing to use curl or Postman. 
 
 ### Question 29
 
