@@ -29,7 +29,6 @@ def client():
 # Dummy classes to mock tokenizer and model behavior
 class DummyTokenizer:
     """A dummy tokenizer that can optionally raise an error."""
-
     def __init__(self, should_raise: bool = False):
         """Initialize the dummy tokenizer."""
         self.should_raise = should_raise
@@ -146,6 +145,8 @@ def test_predict_toxic_success(client):
     ):
         response = client.post('/predict', json={'text': 'you are awful'})
         body = response.json()
+
+        print(f"The problem is , {body}")
 
         assert response.status_code == 200
         assert body['label'] == 'toxic'

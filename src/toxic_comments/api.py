@@ -1,26 +1,22 @@
+import os
 import tempfile
 from contextlib import asynccontextmanager
-import os
-import numpy as np
-import onnxruntime as ort
 from datetime import datetime as dt
 from pathlib import Path
 
 import anyio
 import numpy as np
+import onnxruntime as ort
 import pandas as pd
-import torch
-import torch.nn.functional as F
 from evidently import Report
 from evidently.presets import DataDriftPreset
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from google.cloud import storage
 from pydantic import BaseModel
+from scipy.special import softmax
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer
-from scipy.special import softmax
-from google.cloud import storage
 
 ONNX_MODEL_PATH = "models/model.onnx"
 BASE_MODEL_NAME = 'vinai/bertweet-base'
@@ -39,11 +35,13 @@ ID_LABEL = {0: 'NON-TOXIC', 1: 'TOXIC'}
 # --- Schemas ---
 class ToxicCommentRequest(BaseModel):
     """Request schema for toxic comment classification."""
+
     text: str
 
 
 class ToxicCommentResponse(BaseModel):
     """Response schema for toxic comment classification."""
+
     text: str
     label: str
     confidence: float
@@ -57,20 +55,20 @@ async def lifespan(app: FastAPI):
     try:
         if not os.path.exists(ONNX_MODEL_PATH):
             print(f"Model not found at {ONNX_MODEL_PATH}. Downloading from GCS...")
-            
+
             # Ensure directory exists
             os.makedirs(os.path.dirname(ONNX_MODEL_PATH), exist_ok=True)
-            
+
             # Download from GCS
             gcs_client = storage.Client()
             bucket = gcs_client.bucket("models_bertoxic")
-            blob = bucket.blob("model.onnx")  
+            blob = bucket.blob("model.onnx")
             blob.download_to_filename(ONNX_MODEL_PATH)
 
             blob_data = bucket.blob("model.onnx.data")
             data_path = ONNX_MODEL_PATH + ".data"
             blob_data.download_to_filename(data_path)
-            
+
             print("Download complete.")
         print('Loading Tokenizer...')
         tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME)
@@ -79,7 +77,7 @@ async def lifespan(app: FastAPI):
 
         # Load the ONNX model
         model = ort.InferenceSession(ONNX_MODEL_PATH)
-        
+
         print('ONNX Model and Tokenizer loaded successfully!')
         yield
     except Exception as e:
@@ -130,16 +128,16 @@ def predict(request: ToxicCommentRequest):
         # 1. Preprocessing (Tokenization)
         inputs = tokenizer(
             request.text,
-            return_tensors='np', 
-            padding="max_length", 
+            return_tensors='np',
+            padding="max_length",
             truncation=True,
             max_length=128,
         )
 
         # 2. Inference
         ort_inputs = {
-            "input_ids": inputs["input_ids"].astype(np.int64),
-            "attention_mask": inputs["attention_mask"].astype(np.int64),
+            "input_ids": np.array(inputs["input_ids"], dtype=np.int64),
+            "attention_mask": np.array(inputs["attention_mask"], dtype=np.int64),
         }
 
         logits = model.run(None, ort_inputs)[0]

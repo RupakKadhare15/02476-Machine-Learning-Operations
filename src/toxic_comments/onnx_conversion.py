@@ -1,11 +1,12 @@
 import torch
+
 from src.toxic_comments.model import ToxicCommentsTransformer
 
 CKPT_PATH = "models/best-checkpoint.ckpt"
 ONNX_PATH = "models/model.onnx"
 
 def main():
-    """Convert the model to onnx"""
+    """Convert the model to onnx."""
     print(f"Loading checkpoint from: {CKPT_PATH}")
     model = ToxicCommentsTransformer.load_from_checkpoint(CKPT_PATH)
     model.eval()
@@ -29,7 +30,7 @@ def main():
             "logits": {0: "batch_size"}
         }
     )
-    
+
     print(f"Exported to {ONNX_PATH}")
 
 if __name__ == "__main__":
