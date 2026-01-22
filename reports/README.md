@@ -542,6 +542,7 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 > *to the API to make it more ...*
 >
 > Answer:
+
 Yes, we were successful to write an API for our toxic comment classification model using the FastAPI. For the efficient model inference we have  utilised the ONNX Runtime, which is wrapped in lifespan. Additionally, the model weights are automatically downloaded from Google Cloud Storage (GCS) if they are missing locally. The ‘/health’ endpoint is to verify that the service is operational. The core function is ‘/predict’ which tokenizes the input text, runs the ONNX model, and applies a softmax function to calculate confidence scores which is used to retreive the correct output LABEL. This entire application is used in the [api.dockerfile](../dockerfiles/api.dockerfile) to streamline the deployment part.
 
 --- question 23 fill here ---
