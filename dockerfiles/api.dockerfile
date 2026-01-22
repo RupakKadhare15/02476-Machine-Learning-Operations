@@ -7,12 +7,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project --no-cache --python 3.12
+RUN uv sync --frozen --no-install-project --no-cache --python 3.12 --group backend
 
 COPY src/ src/
 COPY README.md .
 
-RUN uv sync --frozen --no-cache
+RUN uv sync --frozen --no-cache --group backend
 
 
 RUN mkdir -p models/
