@@ -407,7 +407,11 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 >
 > Answer:
 
---- question 14 fill here ---
+![](figures/wandb_ours.png) We have tracked train and validation loss and accuracy. These metrics inform us about  the model's learning progress during training and whether it's overfitting or underfitting. The training loss decreases consistently, showing the model is learning, while validation loss and accuracy help us detect overfitting when validation metrics diverge from training metrics. Accuracy is important for classification tasks as it directly measures how often the model predicts the correct toxicity label. 
+
+![](figures/wandb_ours_2.png) In the second image, it can be seen that we monitored memory, GPU and disk utilization.  Monitoring these system metrics helps us optimize batch sizes and data loading strategies, and figure out any potential bottlenecks in training.
+
+![](figures/wandb_ours_3.png) As seen in the final image, we also tracked F1 and AUROC scores. F1 score is crucial for imbalanced datasets like ours, as it balances precision and recall, ensuring that both false positives and false negatives are minimized. AUROC provides insight into the model's ability to distinguish between classes across different threshold settings, which is important for evaluating overall model performance beyond just accuracy.
 
 ### Question 15
 
@@ -464,7 +468,7 @@ We used the following GCP services:
 
 4. **Vertex AI** - For training our models on GPU instances (T4 GPUs) in the cloud, triggered by Cloud Build.
 
-4. + 1 **Google Cloud Storage API** (via google-cloud-storage Python library) - For programmatic access to buckets from our FastAPI application for downloading embeddings and managing predictions.
+4+1. **Google Cloud Storage API** (via google-cloud-storage Python library) - For programmatic access to buckets from our FastAPI application for downloading embeddings and managing predictions.
 
 ### Question 18
 
@@ -488,7 +492,8 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 >
 > Answer:
 
---- question 19 fill here ---
+![](figures/bucket1.png)
+![](figures/bucket2.png)
 
 ### Question 20
 
