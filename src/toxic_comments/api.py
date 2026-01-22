@@ -18,8 +18,6 @@ from scipy.special import softmax
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer
 
-import traceback
-
 ONNX_MODEL_PATH = "models/model.onnx"
 BASE_MODEL_NAME = 'vinai/bertweet-base'
 
