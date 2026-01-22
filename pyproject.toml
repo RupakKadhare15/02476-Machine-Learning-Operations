@@ -57,7 +57,7 @@ definitely_not_dev = [
     "pre-commit==4.1.0",
     "pytest==8.3.4",
     "ruff==0.14.11",
-    "mkdocstrings-python==1.12.2",
+    "mkdocstrings-python==2.0.1",
     "snakeviz>=2.2.2",
     "pytest-mock>=3.10.0",
     "requests>=2.28.0",
