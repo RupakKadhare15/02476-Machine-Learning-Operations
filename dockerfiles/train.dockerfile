@@ -9,8 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 3. Install Python dependencies
 # Copy only lock files first to cache this layer
-COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-install-project --no-cache --python 3.12
+COPY pyproject.toml .
+COPY uv.lock .
+RUN uv sync --frozen --no-install-project --no-cache --python 3.12 --group train
 
 # 3.5. Override PyTorch with GPU-enabled version for training
 # This replaces the CPU-only version specified in pyproject.toml
@@ -23,7 +24,7 @@ COPY README.md .
 COPY tasks.py .
 
 # 5. Install the local project (so "from toxic_comments" works)
-RUN uv sync --frozen --no-cache --python 3.12
+RUN uv sync --frozen --no-cache --python 3.12 --group train
 
 # 6. Set Entrypoint
 # We point to the script inside the src folder
