@@ -346,17 +346,15 @@ We did make use of DVC in our project to manage our toxic comments dataset. We c
 >
 > Answer:
 
-We have organized our continuous integration into 4 separate workflow files: 
+We have organized our continuous integration into 4 separate workflow files, each serving a distinct purpose in maintaining code quality and reproducibility:
 
-1. **tests.yaml** - Runs unit tests with pytest across multiple operating systems (Ubuntu, Windows, macOS), multiple Python versions (3.11, 3.12), and multiple PyTorch versions (2.6.0, 2.7.0). This uses matrix strategy for comprehensive testing and caching of uv dependencies for faster builds.
+1. **tests.yaml** - This is our most comprehensive workflow that runs unit tests with pytest across multiple dimensions to ensure broad compatibility. It tests across three operating systems (Ubuntu, Windows, macOS), two Python versions (3.11, 3.12), and two PyTorch versions (2.6.0, 2.7.0), resulting in 18 different test configurations using GitHub Actions' matrix strategy. This extensive testing matrix helps us catch platform-specific bugs and ensures our code works across different environments. The workflow uses caching of uv dependencies to significantly speed up build times, reducing CI costs and iteration time.
 
-2. **linting.yaml** - Runs ruff linting and formatting checks to ensure code quality and style consistency.
+2. **linting.yaml** - This workflow enforces code quality standards by running ruff for both linting and formatting checks. It ensures that all code adheres to our style guidelines (120 character line length, proper imports, docstrings, etc.) before it can be merged. This automated check prevents style inconsistencies from entering the codebase and maintains readability across contributions from different team members.
 
-3. **cml_data.yaml** - Triggers on data changes (via DVC), validates data integrity, and can optionally run training and post results as comments using CML (Continuous Machine Learning).
+3. **cml_data.yaml** - This workflow is designed to trigger when data changes are detected (via DVC file modifications). It validates data integrity by checking file sizes, formats, and basic statistics. Optionally, it can automatically trigger a training run and post performance metrics as pull request comments using CML (Continuous Machine Learning), enabling data scientists to see immediately how data changes affect model performance without manual intervention.
 
-4. **pre-commit-update.yaml** - Automatically updates pre-commit hooks on a schedule to keep dependencies current.
-
-All workflows use caching for uv dependencies and authenticate with GCP for accessing data and artifacts. An example workflow run can be seen in our tests.yaml which runs 18 different test configurations (3 OS × 2 Python × 2 PyTorch versions).
+4. **pre-commit-update.yaml** - This maintenance workflow runs on a schedule to automatically update pre-commit hook versions, ensuring our development tools stay current with the latest bug fixes and features without manual tracking.
 
 ## Running code and tracking experiments
 
@@ -413,6 +411,8 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 
 ![](figures/wandb_ours_3.png) As seen in the final image, we also tracked F1 and AUROC scores. F1 score is crucial for imbalanced datasets like ours, as it balances precision and recall, ensuring that both false positives and false negatives are minimized. AUROC provides insight into the model's ability to distinguish between classes across different threshold settings, which is important for evaluating overall model performance beyond just accuracy.
 
+In the end we did not do any parameter sweeps as the manual tuning already provided satisfactory results with a validation accuracy of ~0.93 and F1 score of ~0.92.
+
 ### Question 15
 
 > **Docker is an important tool for creating containerized applications. Explain how you used docker in your**
@@ -442,7 +442,7 @@ For our project we developed three Docker images: one for training, second for t
 >
 > Answer:
 
-Debugging methods varied by team member and situation. We primarily used print statements and logging for quick debugging, and VS Code's debugger for interactive debugging sessions. For API debugging, we used FastAPI's automatic documentation at `/docs` and pytest's test client. We did perform profiling using Python's cProfile and snakeviz for visualization (included in dev dependencies). The profiling results are stored in `reports/profiles/prof.prof`. Profiling revealed that data loading could be optimized with multiple workers (configurable via `num_workers` in training.yaml). However, the code is far from perfect, there's always room for optimization in model inference speed and memory usage.
+Debugging methods varied by team member and situation. We primarily used print statements and logging for quick debugging, and VS Code's debugger for interactive debugging sessions. For API debugging, we used FastAPI's automatic documentation at `/docs` and pytest's test client. We did perform profiling using Python's cProfile and snakeviz for visualization (included in dev dependencies). The profiling results are stored in `reports/profiles/prof.prof`. Profiling revealed that data loading could be optimized with multiple workers (configurable via `num_workers` in training.yaml). However, the code is far from perfect, there's always room for optimization in model inference speed and memory usage. 
 
 ## Working in the cloud
 
