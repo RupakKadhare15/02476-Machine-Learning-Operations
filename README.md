@@ -9,7 +9,7 @@ Where you instead should add your answers. Any other changes may have unwanted c
 auto-generated at the end of the course. For questions where you are asked to include images, start by adding the image
 to the `figures` subfolder (please only use `.png`, `.jpg` or `.jpeg`) and then add the following code in your answer:
 
-`![my_image](figures/<image>.<extension>)`
+`![my_image](reports/figures/<image>.<extension>)`
 
 In addition to this markdown file, we also provide the `report.py` script that provides two utility functions:
 
@@ -396,7 +396,7 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 
 > **Upload 1 to 3 screenshots that show the experiments that you have done in W&B (or another experiment tracking**
 > **service of your choice). This may include loss graphs, logged images, hyperparameter sweeps etc. You can take**
-> **inspiration from [this figure](figures/wandb.png). Explain what metrics you are tracking and why they are**
+> **inspiration from [this figure](reports/figures/wandb.png). Explain what metrics you are tracking and why they are**
 > **important.**
 >
 > Recommended answer length: 200-300 words + 1 to 3 screenshots.
@@ -407,11 +407,11 @@ We secured reproducibility through multiple mechanisms: (1) All hyperparameters 
 >
 > Answer:
 
-![](figures/wandb_ours.png) We have tracked train and validation loss and accuracy. These metrics inform us about  the model's learning progress during training and whether it's overfitting or underfitting. The training loss decreases consistently, showing the model is learning, while validation loss and accuracy help us detect overfitting when validation metrics diverge from training metrics. Accuracy is important for classification tasks as it directly measures how often the model predicts the correct toxicity label. 
+![](reports/figures/wandb_ours.png) We have tracked train and validation loss and accuracy. These metrics inform us about  the model's learning progress during training and whether it's overfitting or underfitting. The training loss decreases consistently, showing the model is learning, while validation loss and accuracy help us detect overfitting when validation metrics diverge from training metrics. Accuracy is important for classification tasks as it directly measures how often the model predicts the correct toxicity label. 
 
-![](figures/wandb_ours_2.png) In the second image, it can be seen that we monitored memory, GPU and disk utilization.  Monitoring these system metrics helps us optimize batch sizes and data loading strategies, and figure out any potential bottlenecks in training.
+![](reports/figures/wandb_ours_2.png) In the second image, it can be seen that we monitored memory, GPU and disk utilization.  Monitoring these system metrics helps us optimize batch sizes and data loading strategies, and figure out any potential bottlenecks in training.
 
-![](figures/wandb_ours_3.png) As seen in the final image, we also tracked F1 and AUROC scores. F1 score is crucial for imbalanced datasets like ours, as it balances precision and recall, ensuring that both false positives and false negatives are minimized. AUROC provides insight into the model's ability to distinguish between classes across different threshold settings, which is important for evaluating overall model performance beyond just accuracy.
+![](reports/figures/wandb_ours_3.png) As seen in the final image, we also tracked F1 and AUROC scores. F1 score is crucial for imbalanced datasets like ours, as it balances precision and recall, ensuring that both false positives and false negatives are minimized. AUROC provides insight into the model's ability to distinguish between classes across different threshold settings, which is important for evaluating overall model performance beyond just accuracy.
 
 In the end we did not do any parameter sweeps as the manual tuning already provided satisfactory results with a validation accuracy of ~0.93 and F1 score of ~0.92.
 
@@ -491,30 +491,30 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 ### Question 19
 
 > **Insert 1-2 images of your GCP bucket, such that we can see what data you have stored in it.**
-> **You can take inspiration from [this figure](figures/bucket.png).**
+> **You can take inspiration from [this figure](reports/figures/bucket.png).**
 >
 > Answer:
 
-![](figures/bucket1.png)
-![](figures/bucket2.png)
+![](reports/figures/bucket1.png)
+![](reports/figures/bucket2.png)
 
 ### Question 20
 
 > **Upload 1-2 images of your GCP artifact registry, such that we can see the different docker images that you have**
-> **stored. You can take inspiration from [this figure](figures/registry.png).**
+> **stored. You can take inspiration from [this figure](reports/figures/registry.png).**
 >
 > Answer:
 
-![](figures/artifacts.png)
+![](reports/figures/artifacts.png)
 
 ### Question 21
 
 > **Upload 1-2 images of your GCP cloud build history, so we can see the history of the images that have been build in**
-> **your project. You can take inspiration from [this figure](figures/build.png).**
+> **your project. You can take inspiration from [this figure](reports/figures/build.png).**
 >
 > Answer:
 
-![](figures/build2.png)
+![](reports/figures/build2.png)
 
 ### Question 22
 
@@ -531,7 +531,7 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 
 Yes, we managed to train our model in the cloud using Vertex AI. We configured a Cloud Build trigger that submits training jobs to Vertex AI using our custom Docker container from Artifact Registry. The configuration is defined in `gcp/vertex_ai_train_cloudbuild.yaml` and `gcp/train_config.yaml`. We chose Vertex AI because it abstracts away VM management and provides easy integration with containerized training jobs that support GPU acceleration. However, we encountered an issue where the training job ran successfully but did not utilize the GPU as expected. Due to time constraints and the lengthy VM provisioning time for each debugging iteration, we were unable to fully investigate the root cause. Although we had to shut down the training job prematurely, as with only CPU it would take an impractical amount of time to complete, we are confident that with further debugging we could resolve the GPU utilization issue.
 
-![](figures/vertex.png)
+![](reports/figures/vertex.png)
 
 ## Deployment
 
@@ -637,12 +637,12 @@ Honestly, our services have not been running in the cloud for an extended period
 >
 > Answer:
 
-![](figures/frontend.png) We implemented a simple frontend for our FastAPI model prediction API using streamlit. The frontend allows users to input text comments directly in the browser and receive toxicity predictions without needing to use curl or Postman. 
+![](reports/figures/frontend.png) We implemented a simple frontend for our FastAPI model prediction API using streamlit. The frontend allows users to input text comments directly in the browser and receive toxicity predictions without needing to use curl or Postman. 
 
 ### Question 29
 
 > **Include a figure that describes the overall architecture of your system and what services that you make use of.**
-> **You can take inspiration from [this figure](figures/overview.png). Additionally, in your own words, explain the**
+> **You can take inspiration from [this figure](reports/figures/overview.png). Additionally, in your own words, explain the**
 > **overall steps in figure.**
 >
 > Recommended answer length: 200-400 words
@@ -654,7 +654,7 @@ Honestly, our services have not been running in the cloud for an extended period
 >
 > Answer:
 
-![](figures/our_overview.png)
+![](reports/figures/our_overview.png)
 The above figure illustrates the overall architecture of our system, spanning local development, continuous integration, cloud-based training, and deployment. The starting point of the system is the local development environment, where all team members implement and test code for data processing, model training, inference, and monitoring. Docker is used to containerize the different components, ensuring reproducibility across environments.
 
 Whenever code is committed and pushed to GitHub, GitHub Actions is automatically triggered. These workflows perform linting, testing, and other quality checks before building Docker images. Once the checks pass, the images are pushed to the Google Cloud Artifact Registry. Separate images are built for the frontend, backend (inference API), and training pipeline.
