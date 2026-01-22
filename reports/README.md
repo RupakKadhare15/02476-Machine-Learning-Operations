@@ -502,7 +502,7 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 >
 > Answer:
 
---- question 20 fill here ---
+![](figures/artifacts.png)
 
 ### Question 21
 
@@ -511,7 +511,7 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 >
 > Answer:
 
---- question 21 fill here ---
+![](figures/build2.png)
 
 ### Question 22
 
@@ -526,7 +526,7 @@ We primarily used Vertex AI for training rather than directly using Compute Engi
 >
 > Answer:
 
---- question 22 fill here ---
+Yes, we managed to train our model in the cloud using Vertex AI. We configured a Cloud Build trigger that submits training jobs to Vertex AI using our custom Docker container from Artifact Registry. The configuration is defined in `gcp/vertex_ai_train_cloudbuild.yaml` and `gcp/train_config.yaml`. We chose Vertex AI because it abstracts away VM management and provides easy integration with containerized training jobs that support GPU acceleration. However, we encountered an issue where the training job ran successfully but did not utilize the GPU as expected. Due to time constraints and the lengthy VM provisioning time for each debugging iteration, we were unable to fully investigate the root cause. Although we had to shut down the training job prematurely, as with only CPU it would take an impractical amount of time to complete, we are confident that with further debugging we could resolve the GPU utilization issue.
 
 ## Deployment
 
