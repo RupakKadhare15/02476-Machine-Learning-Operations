@@ -13,7 +13,7 @@ def main(cfg):
     """Evaluate the model using the best checkpoint from WandB Artifacts."""
     with wandb.init(project=cfg.wandb.project, entity=cfg.wandb.entity, group='evaluation') as run:
         artifact = run.use_artifact(cfg.model_artifact_path, type='model')
-        artifact_dir = artifact.download()
+        artifact_dir = artifact.download(root='models/')
         model = ToxicCommentsTransformer.load_from_checkpoint(f'{artifact_dir}/best-checkpoint.ckpt')
         model.eval()
 
