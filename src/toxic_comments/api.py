@@ -13,7 +13,7 @@ from transformers import AutoTokenizer
 from scipy.special import softmax
 from google.cloud import storage
 
-ONNX_MODEL_PATH = "models/bert-toxic-comments-classifier:v0/model.onnx"
+ONNX_MODEL_PATH = "models/model.onnx"
 BASE_MODEL_NAME = 'vinai/bertweet-base'
 
 # Global variables to hold model and tokenizer
