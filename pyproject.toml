@@ -46,7 +46,7 @@ train = [
     "tqdm>=4.67.1",
     "matplotlib>=3.10.8",
     "seaborn>=0.13.2",
-    "invoke==2.2.0",
+    "invoke==2.2.1",
 ]
 definitely_not_dev = [
     "dvc>=3.66.1",
