@@ -18,6 +18,8 @@ from scipy.special import softmax
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer
 
+import traceback
+
 ONNX_MODEL_PATH = "models/model.onnx"
 BASE_MODEL_NAME = 'vinai/bertweet-base'
 
@@ -53,6 +55,7 @@ async def lifespan(app: FastAPI):
     """Handles automatic model downloading (if missing) and loading on startup."""
     global model, tokenizer, gcs_client
     try:
+        gcs_client = storage.Client()
         if not os.path.exists(ONNX_MODEL_PATH):
             print(f"Model not found at {ONNX_MODEL_PATH}. Downloading from GCS...")
 
@@ -60,7 +63,6 @@ async def lifespan(app: FastAPI):
             os.makedirs(os.path.dirname(ONNX_MODEL_PATH), exist_ok=True)
 
             # Download from GCS
-            gcs_client = storage.Client()
             bucket = gcs_client.bucket("models_bertoxic")
             blob = bucket.blob("model.onnx")
             blob.download_to_filename(ONNX_MODEL_PATH)
@@ -165,6 +167,8 @@ def predict(request: ToxicCommentRequest):
         return response
 
     except Exception as e:
+        traceback.print_stack()
+        print(e)
         raise HTTPException(status_code=500, detail=str(e))
 
 
