@@ -41,6 +41,12 @@ dependencies = [
     "typer==0.15.1",
     "uvicorn==0.40.0",
     "wandb>=0.23.1",
+    "onnx>=1.20.1",
+    "onnxruntime>=1.23.2",
+    "onnxscript>=0.5.7",
+    "scipy>=1.17.0",
+    "google-cloud-storage>=3.8.0",
+    "locust>=2.43.1",
 ]
 
 [dependency-groups]
@@ -120,7 +126,11 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.coverage.run]
-omit = ["tests/*"]
+source = ["src"]
+omit = ["test", "*/_remote_module_non_scriptable*", "/tmp/*",]
+
+[tool.coverage.report]
+show_missing = true
 
 [project.scripts]
 train = "toxic_comments.train:main"
