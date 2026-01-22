@@ -1,3 +1,4 @@
+import os
 import tempfile
 from contextlib import asynccontextmanager
 from datetime import datetime as dt
@@ -5,24 +6,19 @@ from pathlib import Path
 
 import anyio
 import numpy as np
+import onnxruntime as ort
 import pandas as pd
-import torch
-import torch.nn.functional as F
 from evidently import Report
 from evidently.presets import DataDriftPreset
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from google.cloud import storage
 from pydantic import BaseModel
+from scipy.special import softmax
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import AutoTokenizer
 
-# Import your model class using the relative path inside your src structure
-from src.toxic_comments.model import ToxicCommentsTransformer
-
-# --- Configuration ---
-CHECKPOINT_PATH = 'lightning_logs/version_0/checkpoints/epoch=2-step=30.ckpt'
-# We need the base model name to load the correct tokenizer
+ONNX_MODEL_PATH = "models/model.onnx"
 BASE_MODEL_NAME = 'vinai/bertweet-base'
 
 # GCS bucket configuration
@@ -34,6 +30,7 @@ model = None
 tokenizer = None
 gcs_client = None
 
+ID_LABEL = {0: 'NON-TOXIC', 1: 'TOXIC'}
 
 # --- Schemas ---
 class ToxicCommentRequest(BaseModel):
@@ -50,25 +47,38 @@ class ToxicCommentResponse(BaseModel):
     confidence: float
     is_toxic: bool
 
-
 # --- Lifespan Manager ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Lifespan context manager that handles model loading and cleanup."""
+    """Handles automatic model downloading (if missing) and loading on startup."""
     global model, tokenizer, gcs_client
     try:
-        print('Initializing GCS client...')
-        gcs_client = storage.Client()
+        if not os.path.exists(ONNX_MODEL_PATH):
+            print(f"Model not found at {ONNX_MODEL_PATH}. Downloading from GCS...")
 
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(ONNX_MODEL_PATH), exist_ok=True)
+
+            # Download from GCS
+            gcs_client = storage.Client()
+            bucket = gcs_client.bucket("models_bertoxic")
+            blob = bucket.blob("model.onnx")
+            blob.download_to_filename(ONNX_MODEL_PATH)
+
+            blob_data = bucket.blob("model.onnx.data")
+            data_path = ONNX_MODEL_PATH + ".data"
+            blob_data.download_to_filename(data_path)
+
+            print("Download complete.")
         print('Loading Tokenizer...')
         tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL_NAME)
 
-        print(f'Loading Model from {CHECKPOINT_PATH}...')
-        # FORCE CPU LOAD to avoid MPS/device mismatch errors
-        model = ToxicCommentsTransformer.load_from_checkpoint(CHECKPOINT_PATH, map_location=torch.device('cpu'))
-        model.eval()
-        model.freeze()
-        print('Model and Tokenizer loaded successfully!')
+        print(f'Loading ONNX Model from {ONNX_MODEL_PATH}...')
+
+        # Load the ONNX model
+        model = ort.InferenceSession(ONNX_MODEL_PATH)
+
+        print('ONNX Model and Tokenizer loaded successfully!')
         yield
     except Exception as e:
         print(f'Error loading model: {e}')
@@ -108,10 +118,9 @@ def health_check():
     """Health check endpoint that reports service status and model readiness."""
     return {'status': 'running', 'model_loaded': model is not None}
 
-
 @app.post('/predict', response_model=ToxicCommentResponse)
 def predict(request: ToxicCommentRequest):
-    """Classifies input text as toxic or non-toxic and returns the prediction with confidence."""
+    """Classifies input text using ONNX runtime."""
     if not model or not tokenizer:
         raise HTTPException(status_code=503, detail='Model service not ready')
 
@@ -119,36 +128,38 @@ def predict(request: ToxicCommentRequest):
         # 1. Preprocessing (Tokenization)
         inputs = tokenizer(
             request.text,
-            return_tensors='pt',
-            padding=True,
+            return_tensors='np',
+            padding="max_length",
             truncation=True,
-            max_length=128,  # Adjust based on your training config
+            max_length=128,
         )
 
         # 2. Inference
-        with torch.no_grad():
-            outputs = model(**inputs)
-            logits = outputs.logits
+        ort_inputs = {
+            "input_ids": np.array(inputs["input_ids"], dtype=np.int64),
+            "attention_mask": np.array(inputs["attention_mask"], dtype=np.int64),
+        }
 
-        # Check if logits have the expected shape
+        logits = model.run(None, ort_inputs)[0]
+
         if logits.shape[1] != 2:
-            raise ValueError(f'Unexpected logits shape: {logits.shape}')
+            raise ValueError(f'Unexpected logits shape: {logits.shape}. Expected 2 labels.')
 
         # 3. Postprocessing
-        probs = F.softmax(logits, dim=1)
+        probs = softmax(logits, axis=1)
 
         # Get the predicted class index (0 or 1)
-        pred_idx = torch.argmax(probs, dim=1).item()
-        confidence = probs[0][pred_idx].item()
+        pred_idx = np.argmax(probs, axis=1)[0]
+        confidence = float(probs[0][pred_idx])
 
-        # Retrieve label name from the model config
-        label_name = model.config.id2label[pred_idx]
+        # Retrieve label name
+        label_name = ID_LABEL[pred_idx]
 
         response = ToxicCommentResponse(
             text=request.text,
             label=label_name,
             confidence=confidence,
-            is_toxic=(pred_idx == 1),
+            is_toxic=bool(pred_idx == 1),
         )
         add_to_db(response)
         return response
