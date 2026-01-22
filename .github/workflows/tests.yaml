@@ -65,7 +65,7 @@ jobs:
           
       - name: Generate coverage report
         run: |
-          uv run coverage report -m
+          uv run coverage report -m --rcfile=pyproject.toml
           
       - name: Generate coverage XML (for badges)
         run: |
