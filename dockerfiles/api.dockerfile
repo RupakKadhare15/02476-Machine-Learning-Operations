@@ -14,9 +14,8 @@ COPY README.md .
 
 RUN uv sync --frozen --no-cache
 
-# 5. Create directory for the model (Optional but recommended)
-# This ensures the directory exists and has correct permissions for the GCS download
-RUN mkdir -p models/bert-toxic-comments-classifier:v0
+
+RUN mkdir -p models/
 
 # 6. Runtime Configuration
 ENV PORT=8000

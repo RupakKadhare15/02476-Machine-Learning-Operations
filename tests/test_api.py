@@ -29,6 +29,7 @@ def client():
 # Dummy classes to mock tokenizer and model behavior
 class DummyTokenizer:
     """A dummy tokenizer that can optionally raise an error."""
+
     def __init__(self, should_raise: bool = False):
         """Initialize the dummy tokenizer."""
         self.should_raise = should_raise
