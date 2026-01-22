@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv sync --all-extras --dev
+          uv sync --group definitely_not_dev
           uv pip list
 
       - name: ruff format
